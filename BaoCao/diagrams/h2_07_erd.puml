@@ -1,0 +1,59 @@
+@startuml h2_07_erd
+!include _skin.iuml
+hide methods
+hide stereotypes
+entity books {
+  * id : INT <<PK>>
+  --
+  title, slug (UNIQUE)
+  isbn (UNIQUE), description
+  coverImage (JSON), price
+  publishYear, language, pageCount
+  totalQuantity, availableQuantity
+  borrowed/lost/damagedQuantity
+  isActive
+  categoryId : INT <<FK>>
+  publisherId : INT <<FK>>
+}
+entity categories {
+  * id : INT <<PK>>
+  --
+  name, slug
+  description, image
+  isActive, bookCount
+}
+entity publishers {
+  * id : INT <<PK>>
+  --
+  name (UNIQUE), slug
+  address, phone, email
+  website, logo, isActive
+}
+entity authors {
+  * id : INT <<PK>>
+  --
+  fullName, penName, slug
+  bio, birthYear, nationality
+  isActive, bookCount
+}
+entity genres {
+  * id : INT <<PK>>
+  --
+  name, slug, color
+  isActive, bookCount
+}
+entity book_authors {
+  * bookId : INT <<PK,FK>>
+  * authorId : INT <<PK,FK>>
+}
+entity book_genres {
+  * bookId : INT <<PK,FK>>
+  * genreId : INT <<PK,FK>>
+}
+categories |o--o{ books
+publishers |o--o{ books
+books ||--o{ book_authors
+authors ||--o{ book_authors
+books ||--o{ book_genres
+genres ||--o{ book_genres
+@enduml

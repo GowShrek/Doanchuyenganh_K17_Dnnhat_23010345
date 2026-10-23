@@ -1,0 +1,37 @@
+%%{init: {'theme':'default', 'themeVariables': {'fontFamily':'Times New Roman','fontSize':'15px'}, 'gantt': {'barHeight':22,'barGap':6,'topPadding':40,'leftPadding':260,'sectionFontSize':15,'fontSize':14,'numberSectionStyles':4}}}%%
+gantt
+    title Kế hoạch thực hiện đồ án (15 tuần)
+    dateFormat YYYY-MM-DD
+    axisFormat %d/%m
+    tickInterval 1week
+
+    section 1. Khởi động và phân tích
+    Chọn đề tài, lập kế hoạch                   :a1, 2025-09-01, 7d
+    Khảo sát hiện trạng và giải pháp đã có      :a2, after a1, 10d
+    Đặc tả FR, NFR, ràng buộc, use-case         :a3, 2025-09-11, 11d
+
+    section 2. Thiết kế
+    Kiến trúc hệ thống, thiết kế API            :b1, 2025-09-18, 7d
+    Thiết kế CSDL và biểu đồ lớp                :b2, 2025-09-18, 10d
+    Thiết kế giao diện                          :b3, 2025-09-22, 10d
+
+    section 3. Cài đặt
+    Khung dự án, xác thực, phân quyền           :c1, 2025-09-29, 14d
+    Quản lý sách và danh mục                    :c2, 2025-10-06, 14d
+    Mượn, trả, gia hạn, đặt trước, phạt         :c3, 2025-10-13, 21d
+    Giao diện phân hệ độc giả                   :c4, 2025-10-06, 28d
+    Giao diện phân hệ quản trị                  :c5, 2025-10-13, 28d
+    Thông báo, nhắc hạn tự động                 :c6, 2025-11-03, 7d
+    Tích hợp thanh toán VNPay, MoMo             :c7, 2025-11-03, 10d
+    Trợ lý AI gợi ý sách                        :c8, 2025-11-10, 10d
+    Thống kê, xuất báo cáo                      :c9, 2025-11-10, 7d
+    Đóng gói Docker                             :c10, 2025-11-17, 7d
+
+    section 4. Kiểm thử
+    Kiểm thử chức năng và giao diện             :d1, 2025-11-20, 10d
+    Kiểm thử bảo mật và hiệu năng               :d2, 2025-11-24, 7d
+    Sửa lỗi, hoàn thiện                         :d3, 2025-11-27, 10d
+
+    section 5. Báo cáo và bảo vệ
+    Viết báo cáo                                :e1, 2025-11-24, 18d
+    Chuẩn bị slide, demo, bảo vệ                :e2, 2025-12-04, 8d

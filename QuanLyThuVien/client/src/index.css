@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #a30014;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #c92127;
+  --color-on-primary-container: #ffe0dd;
+  --color-inverse-primary: #ffb3ad;
+  --color-secondary: #5d5f5f;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dfe0e0;
+  --color-on-secondary-container: #616363;
+  --color-tertiary: #465062;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #5e687b;
+  --color-on-tertiary-container: #dde8fe;
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+  --color-surface: #f8f9fa;
+  --color-on-surface: #191c1d;
+  --color-surface-variant: #e1e3e4;
+  --color-on-surface-variant: #5c403d;
+  --color-inverse-surface: #2e3132;
+  --color-inverse-on-surface: #f0f1f2;
+  --color-outline: #906f6c;
+  --color-outline-variant: #e4bdba;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container: #edeeef;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+  --color-on-secondary-fixed-variant: #454747;
+
+  --spacing-stack-md: 16px;
+  --spacing-stack-sm: 8px;
+  --spacing-base: 4px;
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1280px;
+  --spacing-stack-lg: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 32px;
+
+  --font-display-lg: "Be Vietnam Pro", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+  --font-headline-lg: "Be Vietnam Pro", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-headline-md: "Be Vietnam Pro", sans-serif;
+  --font-label-md: "Inter", sans-serif;
+  --font-headline-lg-mobile: "Be Vietnam Pro", sans-serif;
+}
+
+@layer utilities {
+  .text-display-lg {
+    font-size: 48px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .text-body-md {
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .text-label-sm {
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .text-headline-lg {
+    font-size: 32px;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  .text-body-lg {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .text-headline-md {
+    font-size: 24px;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .text-label-md {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  .text-headline-lg-mobile {
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body-md);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+}
+
+/* Reset màu link mặc định bị override bởi Ant Design */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Print Styles */
+@media print {
+  /* Ẩn toàn bộ UI mặc định */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Chỉ hiện những element có class print-only và con của nó */
+  .print-only, .print-only * {
+    visibility: visible;
+  }
+
+  /* Đưa phần tử cần in lên đầu trang */
+  .print-only {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Tùy chỉnh trang in (khổ hóa đơn 80mm hoặc vừa khổ A5) */
+  @page {
+    size: 80mm auto; /* Khổ giấy in bill nhiệt phổ biến */
+    margin: 5mm;
+  }
+}

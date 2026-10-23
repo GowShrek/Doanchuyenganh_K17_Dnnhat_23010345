@@ -1,0 +1,42 @@
+@startuml h2_16b_act_gia_han_tra
+!include _skin.iuml
+|Độc giả|
+start
+:Đang mượn sách;
+if (Cần thêm thời gian?) then (có)
+  :Gửi yêu cầu gia hạn,
+  chọn ngày trả mới;
+  |Hệ thống|
+  if (Chưa quá 2 lần và
+  ngày mới sau hạn cũ?) then (đúng)
+    |Thủ thư|
+    :Duyệt / từ chối;
+    |Hệ thống|
+    :Cập nhật hạn trả,
+    thông báo độc giả;
+  else (sai)
+    :Báo lỗi;
+  endif
+  |Độc giả|
+else (không)
+endif
+:Mang sách đến trả;
+|Thủ thư|
+:Xác nhận trả,
+chọn tình trạng sách;
+|Hệ thống|
+:Cập nhật kho
+(trừ khi mất sách);
+if (Quá hạn / hỏng / mất?) then (có)
+  :Tự động tạo
+  phiếu phạt;
+  |Độc giả|
+  :Thanh toán VNPay,
+  MoMo hoặc tiền mặt;
+  |Hệ thống|
+else (không)
+endif
+:Thông báo người đầu
+hàng chờ (nếu có);
+stop
+@enduml

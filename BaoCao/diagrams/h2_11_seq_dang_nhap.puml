@@ -1,0 +1,37 @@
+@startuml h2_11_seq_dang_nhap
+!include _skin.iuml
+autonumber
+actor "Người dùng" as U
+participant "Giao diện\n(LoginPage)" as FE
+participant "users.routes /\nUserController" as C
+participant "UserService" as S
+participant "jwt utils" as J
+database "MySQL" as DB
+
+U -> FE : Nhập email, mật khẩu, nhấn "Đăng nhập"
+FE -> C : POST /api/users/login {email, password}
+C -> S : login(email, password)
+S -> DB : SELECT users WHERE email = ?
+DB --> S : user
+alt Không có tài khoản / mật khẩu sai
+  S --> C : BadRequestError("Tài khoản hoặc mật khẩu không chính xác")
+  C --> FE : 400
+  FE --> U : Hiển thị thông báo lỗi
+else Tài khoản bị khóa
+  S --> C : BadRequestError("Tài khoản đã bị khóa")
+  C --> FE : 400
+else Hợp lệ
+  S -> S : bcrypt.compare(password, user.password)
+  S -> DB : DELETE api_keys WHERE userId
+  S -> J : createApiKey(userId)
+  J -> J : sinh cặp khóa RSA-2048
+  J -> DB : INSERT api_keys
+  S -> J : createToken({id}) [RS256, 15 phút]
+  S -> J : createRefreshToken({id}) [RS256, 7 ngày]
+  S --> C : {token, refreshToken}
+  C --> FE : 200 + Set-Cookie token, refreshToken\n(HttpOnly, SameSite=Strict)
+  FE -> C : GET /api/users/auth (cookie)
+  C --> FE : thông tin người dùng (đã mã hóa AES)
+  FE --> U : Chuyển đến trang theo vai trò\n(độc giả: trang chủ, quản trị: /admin)
+end
+@enduml

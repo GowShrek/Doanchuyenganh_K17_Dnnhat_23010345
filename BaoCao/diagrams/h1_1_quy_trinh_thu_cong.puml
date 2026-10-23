@@ -1,0 +1,33 @@
+@startuml h1_1_quy_trinh_thu_cong
+!pragma layout smetana
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #333333
+skinparam SwimlaneBorderColor #666666
+
+|Độc giả|
+start
+:Đến quầy, hỏi thủ thư\nsách cần mượn;
+|Thủ thư|
+:Tra sổ / file Excel\nđể kiểm tra sách còn hay hết;
+if (Sách còn trên kệ?) then (còn)
+  :Ghi phiếu mượn giấy\n(tên, SĐT, tên sách, ngày hẹn trả);
+  :Cập nhật thủ công\nsố lượng trong file Excel;
+  |Độc giả|
+  :Nhận sách mang về;
+  :Tự nhớ hạn trả;
+  :Mang sách đến trả;
+  |Thủ thư|
+  :Tìm lại phiếu mượn giấy;
+  :Tự đếm số ngày trễ hạn,\ntự tính tiền phạt;
+  :Thu tiền mặt, ghi sổ;
+  :Cập nhật lại file Excel;
+else (hết)
+  :Hẹn độc giả quay lại sau\n(không có danh sách chờ);
+  |Độc giả|
+  :Phải tự quay lại hỏi;
+endif
+stop
+@enduml

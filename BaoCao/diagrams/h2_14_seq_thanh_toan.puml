@@ -1,0 +1,35 @@
+@startuml h2_14_seq_thanh_toan
+!include _skin.iuml
+autonumber
+actor "Độc giả" as R
+participant "Giao diện\n(PaymentModal)" as FE
+participant "fine.routes /\nPaymentController" as C
+participant "FinePaymentService" as PS
+participant "Cổng VNPay\n(sandbox)" as VNP
+database "MySQL" as DB
+
+R -> FE : Mở "Tiền phạt", chọn phiếu, chọn VNPay
+FE -> C : POST /api/fines/{id}/payment {method: "vnpay"}
+C -> PS : createPaymentUrl(fineId, userId, "vnpay")
+PS -> DB : SELECT fine
+alt Không phải phiếu của mình / đã xử lý
+  PS --> FE : 400
+else
+  PS -> PS : buildPaymentUrl(amount, vnp_TxnRef = fineId_PAY...,\nký HMAC-SHA512 bằng secret)
+  PS --> FE : {paymentUrl}
+  FE -> VNP : Mở trang thanh toán (tab mới)
+  R -> VNP : Nhập thông tin thẻ thử nghiệm, xác nhận
+  VNP --> C : Chuyển hướng GET /api/fines/vnpay/return?vnp_TxnRef&vnp_ResponseCode...
+  C -> PS : vnpayReturn(params)
+  PS -> DB : SELECT fine (tách fineId từ vnp_TxnRef)
+  alt vnp_ResponseCode = "00" và fine.status = unpaid
+    PS -> DB : UPDATE fines SET status = paid,\npaymentMethod = vnpay, paidAt = now
+  end
+  PS --> C : redirectUrl (thành công / thất bại)
+  C --> R : Chuyển hướng về /profile?tab=fines&payment=success
+end
+note over PS
+  Thiết kế đúng cần kiểm tra chữ ký vnp_SecureHash
+  trước khi cập nhật (xem NFR-06 và mục 4.1)
+end note
+@enduml

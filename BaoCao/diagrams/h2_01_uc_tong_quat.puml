@@ -1,0 +1,56 @@
+@startuml h2_01_uc_tong_quat
+!include _skin.iuml
+left to right direction
+actor "Khách" as G
+actor "Độc giả" as R
+actor "Thủ thư" as L
+actor "Quản trị viên" as A
+actor "Hệ thống\n(tác vụ định kỳ)" as S
+actor "Cổng thanh toán\nVNPay / MoMo" as P
+actor "Dịch vụ AI\n(Groq API)" as AI
+R -|> G
+A -|> L
+rectangle "Hệ thống Fahasa Digital" {
+  usecase "UC-01 Đăng ký tài khoản" as U01
+  usecase "UC-02 Đăng nhập / đăng xuất" as U02
+  usecase "UC-03 Khôi phục mật khẩu" as U03
+  usecase "UC-04 Tìm kiếm, xem chi tiết sách" as U04
+  usecase "UC-19 Xem tin tức, gửi liên hệ" as U19
+  usecase "UC-12 Trò chuyện với trợ lý AI" as U12
+  usecase "UC-18 Quản lý hồ sơ cá nhân" as U18
+  usecase "UC-05 Gửi yêu cầu mượn sách" as U05
+  usecase "UC-08 Gia hạn sách" as U08
+  usecase "UC-09 Đặt trước sách" as U09
+  usecase "UC-10 Thanh toán tiền phạt" as U10
+  usecase "UC-11 Đánh giá sách" as U11
+  usecase "UC-06 Duyệt yêu cầu mượn" as U06
+  usecase "UC-07 Xác nhận trả sách" as U07
+  usecase "UC-13 Quản lý đầu sách" as U13
+  usecase "UC-14 Quản lý độc giả, tài khoản" as U14
+  usecase "UC-15 Thống kê, xuất báo cáo" as U15
+  usecase "UC-17 Cấu hình hệ thống" as U17
+  usecase "UC-16 Nhắc hạn trả tự động" as U16
+}
+G --> U01
+G --> U02
+G --> U03
+G --> U04
+G --> U19
+G --> U12
+R --> U18
+R --> U05
+R --> U08
+R --> U09
+R --> U10
+R --> U11
+L --> U06
+L --> U07
+L --> U08
+L --> U13
+L --> U14
+L --> U15
+A --> U17
+S --> U16
+U10 --> P
+U12 --> AI
+@enduml

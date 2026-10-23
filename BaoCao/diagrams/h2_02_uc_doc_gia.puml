@@ -1,0 +1,41 @@
+@startuml h2_02_uc_doc_gia
+!include _skin.iuml
+left to right direction
+actor "Độc giả" as R
+rectangle "Phân hệ độc giả" {
+  usecase "Gửi yêu cầu mượn sách\n(UC-05)" as U05
+  usecase "Chọn ngày mượn,\nngày trả" as U05a
+  usecase "Theo dõi lịch sử mượn" as U05b
+  usecase "Gửi yêu cầu gia hạn\n(UC-08)" as U08
+  usecase "Đặt trước sách (UC-09)" as U09
+  usecase "Hủy đặt trước" as U09a
+  usecase "Thanh toán tiền phạt\n(UC-10)" as U10
+  usecase "Thanh toán qua VNPay" as U10a
+  usecase "Thanh toán qua MoMo" as U10b
+  usecase "Đánh giá sách (UC-11)" as U11
+  usecase "Sửa / xóa đánh giá" as U11a
+  usecase "Xem, đánh dấu đã đọc\nthông báo" as UN
+  usecase "Quản lý hồ sơ, đổi mật khẩu,\nxem thẻ thư viện (UC-18)" as U18
+  usecase "Trò chuyện với trợ lý AI\n(UC-12)" as U12
+  usecase "Đăng nhập (UC-02)" as U02
+}
+R --> U05
+R --> U05b
+R --> U08
+R --> U09
+R --> U10
+R --> U11
+R --> UN
+R --> U18
+R --> U12
+U05 ..> U05a : <<include>>
+U09a ..> U09 : <<extend>>
+U10a ..> U10 : <<extend>>
+U10b ..> U10 : <<extend>>
+U11a ..> U11 : <<extend>>
+U05 ..> U02 : <<include>>
+U08 ..> U02 : <<include>>
+U09 ..> U02 : <<include>>
+U10 ..> U02 : <<include>>
+U11 ..> U02 : <<include>>
+@enduml

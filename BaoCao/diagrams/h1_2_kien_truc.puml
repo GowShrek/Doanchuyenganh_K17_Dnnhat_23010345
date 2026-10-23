@@ -1,0 +1,54 @@
+@startuml h1_2_kien_truc
+!pragma layout smetana
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam nodeBackgroundColor #F7F9FC
+skinparam rectangleBackgroundColor #FFFFFF
+left to right direction
+
+actor "Độc giả" as R
+actor "Thủ thư" as L
+actor "Quản trị viên" as A
+
+node "Trình duyệt web" as BR {
+  [Ứng dụng React SPA\n(React 18, Vite, Ant Design,\nTailwind CSS)] as SPA
+}
+
+node "Máy chủ Docker (Docker Compose)" as DH {
+  node "Container client\n(cổng 5173 → 80)" as CC {
+    [Nginx\n(phục vụ file tĩnh SPA)] as NG
+  }
+  node "Container server\n(cổng 3000)" as CS {
+    [REST API Node.js / Express 5\nRoutes → Controllers → Services] as API
+    [Sequelize ORM] as ORM
+    [Tác vụ định kỳ\nnhắc quá hạn 8:00] as CRON
+    folder "uploads/\n(ảnh bìa sách)" as UP
+  }
+  node "Container db" as CD {
+    database "MySQL 8.0\n(volume db_data)" as DB
+  }
+}
+
+cloud "Dịch vụ bên ngoài" as EXT {
+  [Groq API\n(mô hình ngôn ngữ lớn)] as GROQ
+  [VNPay / MoMo\n(sandbox)] as PAY
+  [Google Identity\n(đăng nhập Google)] as GID
+  [Gmail API\n(gửi OTP qua email)] as MAIL
+}
+
+R --> SPA
+L --> SPA
+A --> SPA
+SPA --> NG : tải giao diện (HTTP)
+SPA --> API : gọi REST API (JSON, JWT cookie)
+API --> ORM
+ORM --> DB : SQL
+API --> UP
+CRON --> ORM
+API --> GROQ : gợi ý sách
+API --> PAY : tạo URL thanh toán
+SPA --> GID : lấy Google credential
+API --> MAIL : gửi OTP
+@enduml

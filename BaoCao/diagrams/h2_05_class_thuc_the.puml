@@ -1,0 +1,119 @@
+@startuml h2_05_class_thuc_the
+!include _skin.iuml
+skinparam classAttributeIconSize 0
+hide methods
+class User {
+  id : int
+  fullName : string
+  email : string
+  password : string (bcrypt)
+  role : {admin, librarian, reader}
+  phone, address, birthDay
+  studentId, department, className
+  avatar : string
+  typeLogin : {email, google}
+  isActive : boolean
+}
+class ApiKey {
+  userId : int
+  publicKey : text
+  privateKey : text
+}
+class Book {
+  id : int
+  title, slug : string
+  isbn : string
+  description : text
+  coverImage : JSON
+  publishYear, pageCount : int
+  language : string
+  price : decimal
+  totalQuantity : int
+  availableQuantity : int
+  isActive : boolean
+}
+class Category {
+  name, slug : string
+  description, image
+  isActive : boolean
+}
+class Genre {
+  name, slug : string
+  color : string
+  isActive : boolean
+}
+class Author {
+  fullName, penName : string
+  bio : text
+  birthYear : int
+  nationality : string
+  isActive : boolean
+}
+class Publisher {
+  name, slug : string
+  address, phone, email
+  website, logo
+  isActive : boolean
+}
+class Borrow {
+  borrowCode : string
+  borrowDate, dueDate : date
+  returnDate : date
+  status : BorrowStatus
+  note : text
+  approvedBy, returnedBy : int
+  renewCount, renewLimit : int
+  renewStatus : RenewStatus
+  renewDueDate : date
+  renewNote : string
+}
+class Fine {
+  type : {overdue, lost, damaged}
+  amount, paidAmount : decimal
+  status : {unpaid, paid, waived}
+  reason : text
+  paidAt : datetime
+  paymentMethod : {cash, vnpay, momo}
+}
+class Reservation {
+  status : ReservationStatus
+  queuePosition : int
+  notifiedAt, expiresAt : datetime
+  note : string
+}
+class Review {
+  rating : 1..5
+  comment : text
+  isHidden : boolean
+}
+class Notification {
+  type : NotificationType
+  title : string
+  body : text
+  isRead : boolean
+  link : string
+}
+class Article {
+  title, slug : string
+  thumbnail : string
+  content : text
+  status : {draft, published}
+  views : int
+}
+
+User "1" -- "0..1" ApiKey : khóa ký JWT >
+Category "0..1" -- "0..*" Book : phân loại >
+Publisher "0..1" -- "0..*" Book : xuất bản >
+Author "1..*" -- "0..*" Book : sáng tác >
+Book "0..*" -- "0..*" Genre : thuộc >
+User "1" -- "0..*" Borrow : lập >
+Book "1" -- "0..*" Borrow : được mượn qua <
+Borrow "1" -- "0..*" Fine : phát sinh >
+User "1" -- "0..*" Fine : chịu >
+User "1" -- "0..*" Reservation : đặt >
+Book "1" -- "0..*" Reservation : được đặt qua <
+User "1" -- "0..*" Review : viết >
+Book "1" -- "0..*" Review : nhận <
+User "1" -- "0..*" Notification : nhận >
+User "1" -- "0..*" Article : đăng >
+@enduml

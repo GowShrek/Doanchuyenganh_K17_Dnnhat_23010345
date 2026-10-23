@@ -1,0 +1,23 @@
+# Bí mật: chỉ đưa tệp mẫu .env.example lên kho
+.env
+.env.*
+!.env.example
+
+# Thư viện phụ thuộc và bản build
+node_modules/
+dist/
+build/
+
+# Tệp tạm, khóa của Word, bộ đệm
+~$*
+*.tmp.pdf
+__pycache__/
+*.log
+.DS_Store
+
+# Không thuộc kho mã nguồn
+/*.png
+BanGoc_TruocSuaLoi/
+BaoCao/preview/
+BaoCao/BanSuaTay_*.docx
+BaoCao/phuluc_*.md

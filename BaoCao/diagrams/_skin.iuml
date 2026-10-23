@@ -1,0 +1,23 @@
+!pragma layout smetana
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam ArrowColor #333333
+skinparam ActorBorderColor #333333
+skinparam UsecaseBackgroundColor #FFFFFF
+skinparam UsecaseBorderColor #8B1A1A
+skinparam RectangleBorderColor #555555
+skinparam ClassBackgroundColor #FFFFFF
+skinparam ClassBorderColor #555555
+skinparam ClassHeaderBackgroundColor #F3E5E5
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ParticipantBorderColor #555555
+skinparam SequenceLifeLineBorderColor #888888
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #999999
+hide circle
+skinparam maxMessageSize 170
+skinparam wrapWidth 190
+skinparam ParticipantPadding 6
+skinparam BoxPadding 6

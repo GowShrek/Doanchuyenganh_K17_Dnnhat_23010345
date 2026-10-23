@@ -1,0 +1,33 @@
+@startuml h2_15_seq_ai
+!include _skin.iuml
+autonumber
+actor "Độc giả" as R
+participant "Giao diện\n(AiChat)" as FE
+participant "ai.routes\n(optionalAuth)" as C
+participant "AiService" as AI
+participant "SystemConfigService" as SC
+database "MySQL" as DB
+participant "Groq API\n(openai/gpt-oss-120b)" as G
+
+R -> FE : Nhập câu hỏi, nhấn gửi
+FE -> FE : Lưu lịch sử hội thoại vào localStorage
+FE -> C : POST /api/ai/chat {messages}
+C -> AI : chat(messages, userId | null)
+AI -> SC : get("GROQ_API_KEY")
+alt Chưa cấu hình khóa API
+  AI --> FE : "Hệ thống chưa được cấu hình API Key cho AI."
+else
+  par
+    AI -> DB : buildBookCatalog(): 80 sách đang hiển thị,\nsắp xếp theo lượt mượn
+  else
+    AI -> DB : getUserHistory(): 20 phiếu mượn gần nhất\n(chỉ tên sách, thể loại)
+  end
+  AI -> AI : Ghép system prompt (quy tắc + danh mục + lịch sử)
+  AI -> G : chat.completions.create(model, messages,\ntemperature = 0.7, max_tokens = 1200)
+  G --> AI : nội dung trả lời + dòng SUGGESTED_BOOKS
+  AI -> AI : Tách danh sách tiêu đề gợi ý
+  AI -> DB : findMatchingBooks(titles) (LIKE theo tiêu đề)
+  AI --> FE : {content, suggestedBooks, usage}
+  FE --> R : Hiển thị câu trả lời và thẻ sách\n(ảnh bìa, tác giả, giá, còn / hết)
+end
+@enduml

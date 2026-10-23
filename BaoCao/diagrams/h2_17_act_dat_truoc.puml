@@ -1,0 +1,42 @@
+@startuml h2_17_act_dat_truoc
+!include _skin.iuml
+|Độc giả|
+start
+:Mở trang sách đã hết,
+nhấn "Đặt trước";
+|Hệ thống|
+if (Sách còn trong kho?) then (còn)
+  :Báo "Có thể mượn
+  trực tiếp";
+  stop
+else (hết)
+endif
+if (Đã đặt trước
+sách này?) then (rồi)
+  :Báo lỗi;
+  stop
+else (chưa)
+endif
+:Tạo đặt trước "pending",
+vị trí = số người chờ + 1;
+|Thủ thư|
+:Xác nhận trả một bản
+của sách;
+|Hệ thống|
+:Chọn người đứng đầu
+hàng chờ;
+:Đặt "notified",
+giữ chỗ 48 giờ,
+gửi thông báo;
+|Độc giả|
+if (Mượn trong
+48 giờ?) then (có)
+  :Gửi yêu cầu mượn,
+  nhận sách;
+else (không)
+  |Hệ thống|
+  :Đặt trước
+  hết hạn;
+endif
+stop
+@enduml

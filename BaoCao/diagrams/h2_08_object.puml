@@ -1,0 +1,39 @@
+@startuml h2_08_object
+!include _skin.iuml
+object "minhAnh : User" as u {
+  fullName = "Trần Minh Anh"
+  role = reader
+  isActive = true
+}
+object "sach : Book" as b {
+  title = "Khế Ước Bán Dâu"
+  price = 181500
+}
+object "phieu : Borrow" as br {
+  borrowCode = "BM-20261006-70141"
+  borrowDate = 2026-09-01
+  dueDate = 2026-09-15
+  returnDate = 2026-10-06
+  status = returned
+}
+object "phat : Fine" as f {
+  type = overdue
+  amount = 42000
+  status = paid
+  paymentMethod = cash
+}
+object "danhGia : Review" as rv {
+  rating = 5
+}
+object "thongBao : Notification" as n {
+  type = borrow_approved
+  isRead = false
+}
+u -- br : lập
+b -- br : được mượn qua
+br -- f : phát sinh
+u -- f : chịu
+u -- rv : viết
+b -- rv : nhận
+u -- n : nhận
+@enduml

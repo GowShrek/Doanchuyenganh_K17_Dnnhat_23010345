@@ -1,0 +1,87 @@
+@startuml h2_06_class_nghiep_vu
+!include _skin.iuml
+skinparam classAttributeIconSize 0
+hide empty members
+package "Routes và middleware" {
+  class "borrow.routes" as BorrowRouter <<route>> {
+    POST /api/borrows
+    PATCH /:id/approve, /:id/reject, /:id/return
+    POST /:id/renew
+    PATCH /:id/approve-renew, /:id/reject-renew
+  }
+  class "checkAuth" as AuthMiddleware <<middleware>> {
+    + authUser()
+    + authAdmin()
+    + authAdminOrLibrarian()
+  }
+}
+package "Controllers" {
+  class BorrowController {
+    + requestBorrow(req, res)
+    + approve(req, res)
+    + returnBook(req, res)
+    + requestRenew(req, res)
+  }
+}
+package "Services" {
+  class BorrowService {
+    + requestBorrow(userId, bookId, borrowDate, dueDate)
+    + approve(id, approvedBy)
+    + reject(id, note)
+    + returnBook(id, condition)
+    + requestRenew(id, userId, renewDueDate)
+    + approveRenew(id)
+    + rejectRenew(id)
+  }
+  class FineService {
+    - FINE_CONFIG
+    + createFine(borrowId, userId, type, bookPrice, dueDate)
+    + markPaid(id)
+    + waive(id, reason)
+  }
+  class ReservationService {
+    - HOLD_HOURS = 48
+    + create(bookId, userId)
+    + cancel(id, userId)
+    + notifyNextInQueue(bookId)
+  }
+  class NotificationService {
+    + notifyBorrowApproved(borrow)
+    + notifyRenewApproved(borrow)
+    + notifyReservationReady(reservation)
+    + sendOverdueReminders()
+  }
+  class FinePaymentService {
+    + createPaymentUrl(fineId, userId, method)
+    + vnpayReturn(params)
+    + momoReturn(params)
+  }
+  class AiService {
+    + chat(messages, userId)
+    - buildBookCatalog()
+    - getUserHistory(userId)
+    - findMatchingBooks(titles)
+  }
+}
+package "Models (Sequelize)" {
+  class Borrow <<entity>>
+  class Book <<entity>>
+  class Fine <<entity>>
+  class Reservation <<entity>>
+  class Notification <<entity>>
+}
+BorrowRouter ..> AuthMiddleware : kiểm tra quyền
+BorrowRouter --> BorrowController
+BorrowController --> BorrowService
+BorrowService --> FineService : tạo phiếu phạt
+BorrowService --> ReservationService : báo hàng chờ
+BorrowService --> NotificationService
+ReservationService --> NotificationService
+FinePaymentService --> Fine
+BorrowService --> Borrow
+BorrowService --> Book
+FineService --> Fine
+ReservationService --> Reservation
+NotificationService --> Notification
+AiService --> Book
+@enduml

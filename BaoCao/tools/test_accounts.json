@@ -1,0 +1,32 @@
+{
+  "librarian": {
+    "fullName": "Nguyễn Thu Hà",
+    "email": "thuthu.demo@fahasa-digital.test",
+    "role": "librarian",
+    "password": "Demo@ce7317e7"
+  },
+  "reader1": {
+    "fullName": "Trần Minh Anh",
+    "email": "minhanh.demo@fahasa-digital.test",
+    "role": "reader",
+    "phone": "0900000001",
+    "address": "Hà Nội",
+    "password": "Demo@8756c94f"
+  },
+  "reader2": {
+    "fullName": "Lê Hoàng Nam",
+    "email": "hoangnam.demo@fahasa-digital.test",
+    "role": "reader",
+    "phone": "0900000002",
+    "address": "Hà Nội",
+    "password": "Demo@f53ce831"
+  },
+  "reader3": {
+    "fullName": "Phạm Thu Trang",
+    "email": "thutrang.demo@fahasa-digital.test",
+    "role": "reader",
+    "phone": "0900000003",
+    "address": "Hà Nội",
+    "password": "Demo@c78a0227"
+  }
+}

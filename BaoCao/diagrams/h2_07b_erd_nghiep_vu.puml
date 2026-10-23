@@ -1,0 +1,86 @@
+@startuml h2_07b_erd_nghiep_vu
+!include _skin.iuml
+hide methods
+hide stereotypes
+entity users {
+  * id : INT <<PK>>
+  --
+  fullName, email (UNIQUE)
+  password, role, typeLogin
+  phone, address, birthDay
+  studentId, department
+  className, avatar, isActive
+}
+entity books {
+  * id : INT <<PK>>
+  --
+  (xem Hình 2.7)
+}
+entity borrows {
+  * id : INT <<PK>>
+  --
+  borrowCode (UNIQUE)
+  userId : INT <<FK>>
+  bookId : INT <<FK>>
+  borrowDate, dueDate, returnDate
+  status, note
+  approvedBy, returnedBy
+  renewCount, renewLimit
+  renewStatus, renewDueDate
+}
+entity fines {
+  * id : INT <<PK>>
+  --
+  borrowId : INT <<FK>>
+  userId : INT <<FK>>
+  type, amount, paidAmount
+  status, reason, paidAt
+  paidBy, paymentMethod
+}
+entity reservations {
+  * id : INT <<PK>>
+  --
+  bookId : INT <<FK>>
+  userId : INT <<FK>>
+  status, queuePosition
+  notifiedAt, expiresAt
+}
+entity reviews {
+  * id : INT <<PK>>
+  --
+  bookId : INT <<FK>>
+  userId : INT <<FK>>
+  rating, comment, isHidden
+}
+entity notifications {
+  * id : INT <<PK>>
+  --
+  userId : INT <<FK>>
+  type, title, body
+  isRead, link, refId
+}
+entity articles {
+  * id : INT <<PK>>
+  --
+  authorId : INT <<FK>>
+  title, slug, thumbnail
+  content, status, views
+}
+entity api_keys {
+  * id : INT <<PK>>
+  --
+  userId : INT <<FK>>
+  publicKey, privateKey
+}
+users ||--o{ borrows
+books ||--o{ borrows
+borrows ||--o{ fines
+users ||--o{ fines
+users ||--o{ reservations
+books ||--o{ reservations
+users ||--o{ reviews
+books ||--o{ reviews
+users ||--o{ notifications
+users ||--o{ articles
+users ||--o| api_keys
+@enduml

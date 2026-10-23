@@ -1,0 +1,38 @@
+@startuml h2_16_act_muon_tra
+!include _skin.iuml
+|Độc giả|
+start
+:Tìm kiếm sách,
+mở trang chi tiết;
+if (Sách còn trong kho?) then (còn)
+  :Chọn ngày mượn,
+  ngày trả;
+  :Gửi yêu cầu mượn;
+  |Hệ thống|
+  :Kiểm tra hợp lệ,
+  tạo phiếu "Chờ duyệt";
+  :Thông báo thủ thư;
+  |Thủ thư|
+  if (Duyệt?) then (duyệt)
+    |Hệ thống|
+    :Trừ số lượng
+    còn trong kho;
+    :Phiếu chuyển sang
+    "Đang mượn";
+    :Thông báo độc giả;
+    |Thủ thư|
+    :In phiếu mượn,
+    giao sách tại quầy;
+  else (từ chối)
+    |Hệ thống|
+    :Phiếu chuyển sang
+    "Từ chối", báo độc giả;
+  endif
+else (hết)
+  |Độc giả|
+  :Đặt trước sách
+  (Hình 2.19);
+endif
+|Độc giả|
+stop
+@enduml

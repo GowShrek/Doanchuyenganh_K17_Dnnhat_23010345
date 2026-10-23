@@ -1,0 +1,76 @@
+{
+  "run": "d8813c",
+  "utc_date": "2026-10-23",
+  "rows": [
+    {
+      "id": "SEC-01",
+      "group": "A07 – Lỗi xác thực",
+      "ref": "NFR-06",
+      "name": "Xác minh ID token khi đăng nhập Google",
+      "expected": "Máy chủ xác minh chữ ký ID token bằng khóa công khai của Google (verifyIdToken) trước khi tin vào email",
+      "actual": "users.service.js:117 gọi verifyIdToken với audience là Client ID",
+      "result": "Đạt",
+      "note": "Đã khắc phục: xác minh chữ ký, aud, iss, exp của ID token [15]"
+    },
+    {
+      "id": "SEC-02",
+      "group": "A07 – Lỗi xác thực",
+      "ref": "NFR-06",
+      "name": "Mã OTP đặt lại mật khẩu không bị lộ qua phản hồi API",
+      "expected": "Phản hồi của /forgot-password không chứa mã OTP (OTP chỉ gửi qua email)",
+      "actual": "quan sát trên tài khoản thử nghiệm: HTTP 200, phản hồi chứa trường otp = False",
+      "result": "Đạt",
+      "note": "Đã khắc phục: bỏ otp khỏi phản hồi, OTP chỉ gửi qua email"
+    },
+    {
+      "id": "SEC-03",
+      "group": "A08 – Lỗi toàn vẹn dữ liệu",
+      "ref": "NFR-06",
+      "name": "Kiểm tra chữ ký (checksum) khi nhận kết quả thanh toán",
+      "expected": "vnpayReturn/momoReturn kiểm tra vnp_SecureHash trước khi cập nhật phiếu phạt [20]",
+      "actual": "Hàm vnpayReturn có kiểm tra chữ ký = True; momoReturn/momoIPN có kiểm tra chữ ký = True",
+      "result": "Đạt",
+      "note": "Đã khắc phục: VNPay dùng verifyReturnUrl, MoMo kiểm tra chữ ký HMAC-SHA256 trước khi cập nhật phiếu phạt [16]"
+    },
+    {
+      "id": "SEC-04",
+      "group": "A04 – Thiết kế thiếu an toàn",
+      "ref": "FR-33",
+      "name": "Hàm cập nhật trạng thái quá hạn được gọi định kỳ",
+      "expected": "BorrowService.updateOverdue() được gọi trong tác vụ định kỳ hằng ngày",
+      "actual": "Định nghĩa tại services\\borrow.service.js:211; số nơi gọi trong toàn mã nguồn máy chủ = 1",
+      "result": "Đạt",
+      "note": "Đã khắc phục: gọi updateOverdue() ở đầu tác vụ nhắc hạn (8:00 và kích hoạt thủ công)"
+    },
+    {
+      "id": "SEC-05",
+      "group": "A04 – Thiết kế thiếu an toàn",
+      "ref": "FR-32",
+      "name": "Hàm thu hồi giữ chỗ đặt trước quá 48 giờ được gọi định kỳ",
+      "expected": "ReservationService.expireOldReservations() được gọi định kỳ",
+      "actual": "Định nghĩa tại services\\reservation.service.js:151; số nơi gọi = 1",
+      "result": "Đạt",
+      "note": "Đã khắc phục: gọi expireOldReservations() trong tác vụ định kỳ"
+    },
+    {
+      "id": "SEC-06",
+      "group": "A05 – Cấu hình sai bảo mật",
+      "ref": "NFR-07",
+      "name": "Không ghi cứng thông tin bí mật trong mã nguồn",
+      "expected": "Khóa VNPay/MoMo chỉ lấy từ biến môi trường, không có giá trị dự phòng ghi cứng",
+      "actual": "Số khóa bí mật có giá trị dự phòng ghi cứng trong payment.service.js = 0",
+      "result": "Đạt",
+      "note": "Đã khắc phục: khóa chỉ nạp từ biến môi trường (.env), không còn giá trị mặc định"
+    },
+    {
+      "id": "SEC-07",
+      "group": "A02 – Lỗi mật mã",
+      "ref": "NFR-04",
+      "name": "Mật khẩu lưu dạng băm",
+      "expected": "Mật khẩu băm bằng bcrypt, không lưu dạng rõ",
+      "actual": "users.service.js dùng bcrypt.hashSync = True",
+      "result": "Đạt",
+      "note": ""
+    }
+  ]
+}

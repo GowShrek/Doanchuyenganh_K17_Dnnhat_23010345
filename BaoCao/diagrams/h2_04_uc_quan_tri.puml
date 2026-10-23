@@ -1,0 +1,30 @@
+@startuml h2_04_uc_quan_tri
+!include _skin.iuml
+left to right direction
+actor "Quản trị viên" as A
+actor "Thủ thư" as L
+actor "Hệ thống\n(tác vụ định kỳ 8:00)" as S
+A -|> L
+rectangle "Phân hệ quản trị và tác vụ tự động" {
+  usecase "Quản lý tài khoản,\nphân quyền (UC-14)" as U14
+  usecase "Tạo tài khoản thủ thư /\nquản trị viên" as U14a
+  usecase "Xóa tài khoản" as U14b
+  usecase "Xóa sách, danh mục,\nthể loại, tác giả, NXB" as UDel
+  usecase "Cấu hình hệ thống (UC-17)" as U17
+  usecase "Cấu hình email gửi OTP" as U17a
+  usecase "Cấu hình khóa API trợ lý AI" as U17b
+  usecase "Nhắc hạn trả tự động (UC-16)" as U16
+  usecase "Gửi thông báo sắp đến hạn\n(trước 1 và 3 ngày)" as U16a
+  usecase "Gửi thông báo quá hạn" as U16b
+}
+A --> U14
+A --> UDel
+A --> U17
+U14a ..> U14 : <<extend>>
+U14b ..> U14 : <<extend>>
+U17 ..> U17a : <<include>>
+U17 ..> U17b : <<include>>
+S --> U16
+U16 ..> U16a : <<include>>
+U16 ..> U16b : <<include>>
+@enduml

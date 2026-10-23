@@ -1,0 +1,25 @@
+@startuml h2_10_state_reservation_fine
+!include _skin.iuml
+hide empty description
+state "Đặt trước (Reservation)" as RS {
+  state "pending\n(đang xếp hàng)" as r_pending
+  state "notified\n(giữ chỗ 48 giờ)" as r_notified
+  state "fulfilled" as r_fulfilled
+  state "expired" as r_expired
+  state "cancelled" as r_cancelled
+  [*] --> r_pending : Độc giả đặt trước\n[availableQuantity = 0]
+  r_pending --> r_notified : Có sách được trả\n[đứng đầu hàng chờ]
+  r_pending --> r_cancelled : Độc giả / thủ thư hủy
+  r_notified --> r_fulfilled : Độc giả mượn sách
+  r_notified --> r_expired : Hết 48 giờ
+  r_notified --> r_cancelled : Hủy
+}
+state "Phiếu phạt (Fine)" as FS {
+  state "unpaid" as f_unpaid
+  state "paid" as f_paid
+  state "waived" as f_waived
+  [*] --> f_unpaid : Tạo khi trả sách\n(quá hạn / hỏng / mất)
+  f_unpaid --> f_paid : Thu tiền mặt hoặc\nthanh toán VNPay / MoMo
+  f_unpaid --> f_waived : Thủ thư miễn phạt
+}
+@enduml

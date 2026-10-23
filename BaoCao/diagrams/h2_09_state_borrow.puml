@@ -1,0 +1,22 @@
+@startuml h2_09_state_borrow
+!include _skin.iuml
+hide empty description
+[*] --> pending : Độc giả gửi yêu cầu mượn\n[sách còn trong kho]
+pending --> rejected : Thủ thư từ chối
+pending --> approved : Thủ thư duyệt\n/ availableQuantity -= 1
+approved --> overdue : Quá hạn trả\n[ngày hiện tại > dueDate]
+approved --> approved : Duyệt gia hạn\n/ dueDate = renewDueDate,\nrenewCount += 1
+overdue --> approved : Duyệt gia hạn
+approved --> returned : Trả sách (bình thường / hỏng)\n/ availableQuantity += 1,\ntạo phiếu phạt nếu có
+overdue --> returned : Trả sách\n/ tạo phiếu phạt quá hạn
+approved --> lost : Báo mất sách\n/ tạo phiếu phạt mất sách
+overdue --> lost : Báo mất sách
+rejected --> [*]
+returned --> [*]
+lost --> [*]
+note right of approved
+  Trạng thái gia hạn (renewStatus) song song:
+  none → pending → approved | rejected
+  Tối đa renewLimit = 2 lần
+end note
+@enduml

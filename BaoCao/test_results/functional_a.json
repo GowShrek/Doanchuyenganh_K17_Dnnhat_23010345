@@ -1,0 +1,307 @@
+{
+  "run": "7cd110",
+  "utc_date": "2026-10-23",
+  "rows": [
+    {
+      "id": "TC-01",
+      "group": "Tài khoản",
+      "ref": "FR-01",
+      "name": "Đăng ký tài khoản hợp lệ",
+      "expected": "HTTP 200/201, tạo tài khoản",
+      "actual": "HTTP 200",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-02",
+      "group": "Tài khoản",
+      "ref": "BR-10",
+      "name": "Tự đăng ký kèm role=admin trong yêu cầu",
+      "expected": "Vai trò vẫn là reader",
+      "actual": "role = reader",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-03",
+      "group": "Tài khoản",
+      "ref": "FR-01",
+      "name": "Đăng ký trùng email",
+      "expected": "HTTP 409",
+      "actual": "HTTP 409 – Email đã tồn tại",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-04",
+      "group": "Tài khoản",
+      "ref": "NFR-04",
+      "name": "Danh sách người dùng không trả mật khẩu",
+      "expected": "Không có trường password",
+      "actual": "Không có trường password",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-05",
+      "group": "Tài khoản",
+      "ref": "FR-02, NFR-05",
+      "name": "Đăng nhập đúng email và mật khẩu",
+      "expected": "HTTP 200; cookie token có HttpOnly, SameSite=Strict",
+      "actual": "HTTP 200; HttpOnly=True; SameSite=Strict=True",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-06",
+      "group": "Tài khoản",
+      "ref": "NFR-05",
+      "name": "Thuật toán ký và thời hạn access token",
+      "expected": "RS256; 900 giây (15 phút)",
+      "actual": "alg=RS256; exp − iat = 900 giây",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-07",
+      "group": "Tài khoản",
+      "ref": "FR-02",
+      "name": "Đăng nhập sai mật khẩu",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Tài khoản hoặc mật khẩu không chính xác",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-08",
+      "group": "Tài khoản",
+      "ref": "NFR-05",
+      "name": "Dùng lại token cũ sau khi đăng xuất",
+      "expected": "Bị từ chối (401)",
+      "actual": "HTTP 401",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-09",
+      "group": "Tài khoản",
+      "ref": "FR-24",
+      "name": "Đăng nhập bằng tài khoản đã bị khóa",
+      "expected": "HTTP 400, báo tài khoản bị khóa",
+      "actual": "HTTP 400 – Tài khoản đã bị khóa. Vui lòng liên hệ thủ thư",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-10",
+      "group": "Phân quyền",
+      "ref": "NFR-06",
+      "name": "Gọi API quản trị khi chưa đăng nhập",
+      "expected": "401",
+      "actual": "HTTP 401",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-11",
+      "group": "Phân quyền",
+      "ref": "NFR-06",
+      "name": "Độc giả gọi API quản trị mượn trả",
+      "expected": "401/403",
+      "actual": "HTTP 401",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-12",
+      "group": "Phân quyền",
+      "ref": "BR-10",
+      "name": "Thủ thư gọi API xóa tài khoản",
+      "expected": "401/403 (chỉ Quản trị viên)",
+      "actual": "HTTP 401",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-13",
+      "group": "Phân quyền",
+      "ref": "FR-30",
+      "name": "Thủ thư đọc cấu hình hệ thống (khóa API, OAuth)",
+      "expected": "401/403 (chỉ Quản trị viên)",
+      "actual": "HTTP 200, trả về 6 khóa cấu hình",
+      "result": "Không đạt",
+      "note": "Route /api/system-configs dùng authAdminOrLibrarian"
+    },
+    {
+      "id": "TC-14",
+      "group": "Sách",
+      "ref": "FR-18",
+      "name": "Thủ thư thêm sách",
+      "expected": "HTTP 201; còn = tổng = 2",
+      "actual": "HTTP 201; còn 2/2",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-15",
+      "group": "Sách",
+      "ref": "FR-18",
+      "name": "Thêm sách trùng ISBN",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – ISBN đã tồn tại",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-16",
+      "group": "Sách",
+      "ref": "FR-06",
+      "name": "Tìm kiếm sách theo tên",
+      "expected": "Có sách vừa thêm",
+      "actual": "1 kết quả",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-17",
+      "group": "Phân quyền",
+      "ref": "BR-10",
+      "name": "Độc giả gọi API xóa sách",
+      "expected": "401/403",
+      "actual": "HTTP 401",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-18",
+      "group": "Sách",
+      "ref": "FR-18",
+      "name": "Sách bị ẩn không xuất hiện ở API tra cứu công khai",
+      "expected": "Không trả về sách bị ẩn",
+      "actual": "có isActive=true: không trả về; không truyền tham số: trả về",
+      "result": "Không đạt",
+      "note": "Máy chủ chỉ lọc sách ẩn khi client truyền isActive=true"
+    },
+    {
+      "id": "TC-19",
+      "group": "Mượn sách",
+      "ref": "FR-09",
+      "name": "Gửi yêu cầu mượn hợp lệ",
+      "expected": "status pending; mã BM-YYYYMMDD-XXXXX",
+      "actual": "HTTP 201; status=pending; mã=BM-20261023-45340",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-20",
+      "group": "Mượn sách",
+      "ref": "BR-06",
+      "name": "Gửi trùng yêu cầu cho cùng đầu sách",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Bạn đang có phiếu mượn cuốn sách này chưa xử lý xong",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-21",
+      "group": "Mượn sách",
+      "ref": "FR-09",
+      "name": "Ngày trả không sau ngày mượn",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Ngày trả phải sau ngày mượn",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-22",
+      "group": "Mượn sách",
+      "ref": "FR-19",
+      "name": "Thủ thư duyệt yêu cầu mượn",
+      "expected": "status approved; còn 2 → 1",
+      "actual": "status=approved; còn 1",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-23",
+      "group": "Mượn sách",
+      "ref": "FR-19",
+      "name": "Duyệt lại phiếu đã duyệt",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Phiếu mượn không ở trạng thái chờ duyệt",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-24",
+      "group": "Thông báo",
+      "ref": "FR-15",
+      "name": "Độc giả nhận thông báo khi phiếu được duyệt",
+      "expected": "Có thông báo borrow_approved",
+      "actual": "có = True",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-25",
+      "group": "Mượn sách",
+      "ref": "FR-19",
+      "name": "Thủ thư từ chối yêu cầu mượn",
+      "expected": "status rejected; lưu lý do",
+      "actual": "status=rejected; note=TC từ chối",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-26",
+      "group": "Mượn sách",
+      "ref": "FR-09",
+      "name": "Chọn thời hạn mượn bất thường (800 ngày, ngày mượn trong quá khứ)",
+      "expected": "Bị từ chối theo quy định thời hạn mượn",
+      "actual": "HTTP 201 – Gửi yêu cầu mượn thành công",
+      "result": "Không đạt",
+      "note": "Hệ thống chưa giới hạn thời hạn mượn và chưa chặn ngày mượn trong quá khứ"
+    },
+    {
+      "id": "TC-27",
+      "group": "Gia hạn",
+      "ref": "FR-11",
+      "name": "Gia hạn phiếu của người khác",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Không có quyền gia hạn phiếu mượn này",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-28",
+      "group": "Gia hạn",
+      "ref": "BR-04",
+      "name": "Ngày trả mới không sau hạn hiện tại",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Ngày trả mới phải sau ngày hạn hiện tại",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-29",
+      "group": "Gia hạn",
+      "ref": "FR-11, FR-21",
+      "name": "Gửi và duyệt gia hạn 2 lần",
+      "expected": "dueDate = 2026-11-20; renewCount = 2",
+      "actual": "dueDate = 2026-11-20; renewCount = 2",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-30",
+      "group": "Gia hạn",
+      "ref": "BR-04",
+      "name": "Gia hạn lần thứ 3",
+      "expected": "HTTP 400, báo đạt giới hạn",
+      "actual": "HTTP 400 – Đã đạt giới hạn gia hạn (2 lần)",
+      "result": "Đạt",
+      "note": ""
+    }
+  ],
+  "book_id": 44
+}

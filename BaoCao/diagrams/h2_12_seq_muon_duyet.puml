@@ -1,0 +1,39 @@
+@startuml h2_12_seq_muon_duyet
+!include _skin.iuml
+autonumber
+actor "Độc giả" as R
+actor "Thủ thư" as L
+participant "Giao diện\n(React)" as FE
+participant "BorrowService" as BS
+participant "Notification\nService" as NS
+database "MySQL" as DB
+
+== Độc giả gửi yêu cầu mượn ==
+R -> FE : Chọn ngày mượn, ngày trả, nhấn "Xác nhận gửi yêu cầu"
+FE -> BS : POST /api/borrows (qua authUser)
+BS -> DB : SELECT book
+alt Hết sách / ngày trả không hợp lệ / đã có phiếu đang xử lý
+  BS --> FE : 400 + thông báo lỗi
+else Hợp lệ
+  BS -> DB : INSERT borrows (pending, mã BM-...)
+  BS -> NS : notifyAdminNewBorrow()
+  NS -> DB : INSERT notifications
+  BS --> FE : 201
+  FE --> R : "Đã gửi yêu cầu, chờ duyệt"
+end
+
+== Thủ thư duyệt ==
+L -> FE : Nhấn "Duyệt" trên trang Quản lý mượn trả
+FE -> BS : PATCH /api/borrows/{id}/approve (qua authAdminOrLibrarian)
+BS -> DB : SELECT borrow, book
+alt Phiếu không ở trạng thái pending / hết sách
+  BS --> FE : 400
+else
+  BS -> DB : UPDATE books: availableQuantity - 1
+  BS -> DB : UPDATE borrows: status = approved
+  BS -> NS : notifyBorrowApproved()
+  NS -> DB : INSERT notifications
+  BS --> FE : 200
+  FE --> L : Cập nhật danh sách, cho phép in phiếu
+end
+@enduml

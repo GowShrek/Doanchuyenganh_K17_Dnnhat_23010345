@@ -1,0 +1,39 @@
+@startuml h2_13_seq_tra_sach
+!include _skin.iuml
+autonumber
+actor "Thủ thư" as L
+participant "Giao diện\n(React)" as FE
+participant "BorrowService" as BS
+participant "FineService" as FS
+participant "Reservation\nService" as RS
+database "MySQL" as DB
+
+L -> FE : Nhấn "Trả sách", chọn tình trạng (bình thường / hỏng / mất)
+FE -> BS : PATCH /api/borrows/{id}/return {condition}
+BS -> DB : SELECT borrow + book
+alt Phiếu không ở trạng thái đang mượn
+  BS --> FE : 400
+else
+  opt condition khác "lost"
+    BS -> DB : UPDATE books: availableQuantity + 1
+  end
+  BS -> DB : UPDATE borrows: status = returned | lost, returnDate = hôm nay
+  opt Quá hạn hoặc hỏng hoặc mất
+    BS -> FS : createFine(type, bookPrice, dueDate)
+    FS -> FS : Tính tiền phạt theo loại
+    FS -> DB : INSERT fines (unpaid)
+  end
+  opt condition khác "lost"
+    BS -> RS : notifyNextInQueue(bookId)
+    RS -> DB : Lấy người đầu hàng chờ, đặt notified, giữ chỗ 48 giờ
+    RS -> DB : INSERT notifications
+  end
+  BS --> FE : 200
+  FE --> L : Hiển thị kết quả và phiếu phạt (nếu có)
+end
+note right of FS
+  overdue: max(5.000; số ngày trễ × 2.000)
+  damaged: 30% giá sách (+ phạt quá hạn nếu trễ)
+  lost: 100% giá sách
+end note
+@enduml

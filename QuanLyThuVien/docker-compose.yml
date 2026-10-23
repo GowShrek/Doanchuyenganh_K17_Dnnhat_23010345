@@ -1,0 +1,83 @@
+services:
+  # ──────────────────────────────────────────
+  # 1. MySQL Database
+  # ──────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: thu_vien_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:?Thiếu DB_PASS trong file .env}
+      MYSQL_DATABASE: ${DB_NAME:-quan_ly_thu_vien}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - thu_vien_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASS:?Thiếu DB_PASS trong file .env}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ──────────────────────────────────────────
+  # 2. Node.js Backend API
+  # ──────────────────────────────────────────
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: thu_vien_server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: ${DB_PASS:?Thiếu DB_PASS trong file .env}
+      DB_NAME: ${DB_NAME:-quan_ly_thu_vien}
+      URL_CLIENT: http://localhost:5173
+      SECRET_ACCESS_TOKEN: ${SECRET_ACCESS_TOKEN:?Thiếu SECRET_ACCESS_TOKEN trong file .env}
+      SECRET_REFRESH_TOKEN: ${SECRET_REFRESH_TOKEN:?Thiếu SECRET_REFRESH_TOKEN trong file .env}
+      SECRET_CRYPTO: ${SECRET_CRYPTO:?Thiếu SECRET_CRYPTO trong file .env}
+      EMAIL_USER: ${EMAIL_USER:-}
+      CLIENT_ID: ${CLIENT_ID:-}
+      CLIENT_SECRET: ${CLIENT_SECRET:-}
+      REDIRECT_URI: ${REDIRECT_URI:-}
+      REFRESH_TOKEN: ${REFRESH_TOKEN:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      VNPAY_TMN_CODE: ${VNPAY_TMN_CODE:-}
+      VNPAY_SECRET: ${VNPAY_SECRET:-}
+      MOMO_ACCESS_KEY: ${MOMO_ACCESS_KEY:-}
+      MOMO_SECRET_KEY: ${MOMO_SECRET_KEY:-}
+    ports:
+      - "3000:3000"
+    networks:
+      - thu_vien_net
+
+  # ──────────────────────────────────────────
+  # 3. React Frontend (Nginx)
+  # ──────────────────────────────────────────
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        VITE_SECRET_CRYPTO: ${SECRET_CRYPTO:?Thiếu SECRET_CRYPTO trong file .env}
+    container_name: thu_vien_client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "5173:80"
+    networks:
+      - thu_vien_net
+
+volumes:
+  db_data:
+
+networks:
+  thu_vien_net:
+    driver: bridge

@@ -1,0 +1,257 @@
+{
+  "run": "e8ebf3",
+  "utc_date": "2026-10-23",
+  "rows": [
+    {
+      "id": "TC-31",
+      "group": "Đặt trước",
+      "ref": "BR-07",
+      "name": "Đặt trước khi sách vẫn còn",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Sách vẫn còn trong kho, bạn có thể mượn trực tiếp",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-32",
+      "group": "Đặt trước",
+      "ref": "FR-12",
+      "name": "Đặt trước khi sách đã hết",
+      "expected": "status pending; vị trí 1",
+      "actual": "HTTP 201; status=pending; vị trí=1",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-33",
+      "group": "Đặt trước",
+      "ref": "BR-07",
+      "name": "Đặt trước lần 2 cùng đầu sách",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Bạn đã đặt trước sách này rồi",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-34",
+      "group": "Đặt trước",
+      "ref": "FR-12",
+      "name": "Độc giả thứ hai đặt trước",
+      "expected": "vị trí 2",
+      "actual": "vị trí=2",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-35",
+      "group": "Trả sách",
+      "ref": "FR-20, FR-31",
+      "name": "Trả sách đúng hạn, tình trạng bình thường",
+      "expected": "status returned; kho +1; không phát sinh phạt",
+      "actual": "status=returned; còn 1; phạt=[]",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-36",
+      "group": "Đặt trước",
+      "ref": "FR-32",
+      "name": "Có sách trả → người đầu hàng chờ được thông báo",
+      "expected": "status notified; giữ chỗ 48 giờ; có thông báo reservation_ready",
+      "actual": "status=notified; giữ chỗ=48.0 giờ; thông báo=True",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-37",
+      "group": "Đặt trước",
+      "ref": "FR-32",
+      "name": "Người được thông báo mượn sách",
+      "expected": "Đặt trước chuyển fulfilled",
+      "actual": "trạng thái đặt trước = ['notified']",
+      "result": "Không đạt",
+      "note": "markFulfilled() không được gọi khi duyệt mượn"
+    },
+    {
+      "id": "TC-38",
+      "group": "Đặt trước",
+      "ref": "FR-12",
+      "name": "Độc giả hủy đặt trước",
+      "expected": "status cancelled",
+      "actual": "HTTP 200; status=None",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-39",
+      "group": "Phạt",
+      "ref": "BR-01",
+      "name": "Trả trễ 10 ngày",
+      "expected": "1 phiếu quá hạn 20.000 đ",
+      "actual": "[('overdue', 20000.0)]",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-40",
+      "group": "Phạt",
+      "ref": "BR-01",
+      "name": "Trả trễ 1 ngày",
+      "expected": "Mức tối thiểu 5.000 đ",
+      "actual": "[('overdue', 5000.0)]",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-41",
+      "group": "Phạt",
+      "ref": "BR-02",
+      "name": "Trả sách hư hỏng, đúng hạn",
+      "expected": "30% giá bìa = 30.000 đ",
+      "actual": "[('damaged', 30000.0)]",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-42",
+      "group": "Phạt",
+      "ref": "BR-02",
+      "name": "Trả sách hư hỏng và trễ 4 ngày",
+      "expected": "2 phiếu: hư hỏng 30.000 đ và quá hạn 8.000 đ",
+      "actual": "[('damaged', 30000.0), ('overdue', 8000.0)]",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-43",
+      "group": "Phạt",
+      "ref": "BR-03",
+      "name": "Báo mất sách",
+      "expected": "status lost; phạt 100.000 đ; kho giảm 1 và không cộng lại",
+      "actual": "status=lost; [('lost', 100000.0)]; kho 1 → 0",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-44",
+      "group": "Sách",
+      "ref": "FR-18",
+      "name": "Thống kê số bản đã mất của đầu sách",
+      "expected": "lostQuantity = 1",
+      "actual": "lostQuantity = 0, damagedQuantity = 0",
+      "result": "Không đạt",
+      "note": "Trả sách mất/hỏng không cập nhật lostQuantity, damagedQuantity"
+    },
+    {
+      "id": "TC-45",
+      "group": "Phạt",
+      "ref": "FR-22",
+      "name": "Thủ thư xác nhận đã thu tiền mặt",
+      "expected": "status paid",
+      "actual": "status=paid",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-46",
+      "group": "Phạt",
+      "ref": "FR-22",
+      "name": "Thủ thư miễn phạt kèm lý do",
+      "expected": "status waived",
+      "actual": "status=waived",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-47",
+      "group": "Phạt",
+      "ref": "FR-13",
+      "name": "Tạo liên kết thanh toán VNPay cho phiếu phạt của mình",
+      "expected": "URL tới sandbox.vnpayment.vn, có vnp_SecureHash",
+      "actual": "HTTP 200; host đúng=True; có chữ ký=True",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-48",
+      "group": "Phạt",
+      "ref": "FR-13",
+      "name": "Tạo thanh toán cho phiếu phạt của người khác",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Không có quyền thanh toán phiếu phạt này",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-49",
+      "group": "Đánh giá",
+      "ref": "BR-09",
+      "name": "Đánh giá 6 sao",
+      "expected": "HTTP 400",
+      "actual": "HTTP 400 – Điểm đánh giá phải từ 1 đến 5",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-50",
+      "group": "Đánh giá",
+      "ref": "FR-14",
+      "name": "Mỗi độc giả một đánh giá; tính điểm trung bình",
+      "expected": "2 đánh giá; trung bình 3.5",
+      "actual": "tổng = 2; trung bình = 3.5",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-51",
+      "group": "Đánh giá",
+      "ref": "FR-25",
+      "name": "Thủ thư ẩn một đánh giá",
+      "expected": "Đánh giá bị ẩn không hiển thị công khai",
+      "actual": "số đánh giá công khai 2 → 1",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-52",
+      "group": "Thông báo",
+      "ref": "FR-33",
+      "name": "Nhắc phiếu đến hạn sau 1 ngày",
+      "expected": "Có thông báo overdue_warning",
+      "actual": "HTTP 200; có = True",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-53",
+      "group": "Thông báo",
+      "ref": "FR-33",
+      "name": "Phiếu quá hạn 3 ngày được đánh dấu quá hạn và nhắc",
+      "expected": "status overdue; có thông báo overdue_notice",
+      "actual": "status = overdue; thông báo = True",
+      "result": "Đạt",
+      "note": "BorrowService.updateOverdue() không được gọi ở đâu"
+    },
+    {
+      "id": "TC-54",
+      "group": "Thống kê",
+      "ref": "FR-27",
+      "name": "Ô 'Quá hạn' trên trang Tổng quan",
+      "expected": "≥ 1 (đang có phiếu quá hạn)",
+      "actual": "overdueBorrows = 12",
+      "result": "Đạt",
+      "note": ""
+    },
+    {
+      "id": "TC-55",
+      "group": "Trợ lý AI",
+      "ref": "FR-16, NFR-03",
+      "name": "Hỏi trợ lý AI gợi ý sách",
+      "expected": "Trả lời tiếng Việt; sách gợi ý có trong CSDL; ≤ 10 giây",
+      "actual": "HTTP 200; 2 thẻ sách khớp CSDL; 2.89 giây; 2360 token",
+      "result": "Đạt",
+      "note": ""
+    }
+  ],
+  "ai_answer_excerpt": "Chào bạn! Dưới đây là 2 cuốn sách văn học nước ngoài hiện còn trong kho:\n\n- [ID:18] \"Kiêu Hãnh Và Định Kiến\" — Jane Austen  \n- [ID:27] \"1984\" — Eric Arthur Blair  \n\nChúc bạn đọc vui!"
+}

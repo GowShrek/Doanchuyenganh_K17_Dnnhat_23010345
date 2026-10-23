@@ -1,0 +1,41 @@
+@startuml h2_03_uc_thu_thu
+!include _skin.iuml
+left to right direction
+actor "Thủ thư" as L
+actor "Hệ thống" as S
+rectangle "Phân hệ thủ thư" {
+  usecase "Duyệt / từ chối\nyêu cầu mượn (UC-06)" as U06
+  usecase "In phiếu mượn" as U06a
+  usecase "Xác nhận trả sách\n(UC-07)" as U07
+  usecase "Ghi nhận tình trạng sách\n(bình thường / hỏng / mất)" as U07a
+  usecase "Tự động tạo phiếu phạt" as U07b
+  usecase "Thông báo người đầu\nhàng chờ đặt trước" as U07c
+  usecase "Duyệt / từ chối gia hạn\n(UC-08)" as U08
+  usecase "Quản lý tiền phạt\n(thu tiền mặt, miễn phạt)" as UF
+  usecase "Quản lý hàng chờ đặt trước" as UR
+  usecase "Quản lý đầu sách (UC-13)" as U13
+  usecase "Quản lý danh mục, thể loại,\ntác giả, NXB" as U13a
+  usecase "Tải ảnh bìa, in mã QR" as U13b
+  usecase "Quản lý độc giả\n(thêm, sửa, khóa) (UC-14)" as U14
+  usecase "Kiểm duyệt đánh giá" as URV
+  usecase "Quản lý bài viết, liên hệ" as UA
+  usecase "Xem thống kê,\nxuất báo cáo (UC-15)" as U15
+}
+L --> U06
+L --> U07
+L --> U08
+L --> UF
+L --> UR
+L --> U13
+L --> U13a
+L --> U14
+L --> URV
+L --> UA
+L --> U15
+U06a ..> U06 : <<extend>>
+U07 ..> U07a : <<include>>
+U07 ..> U07b : <<include>>
+U07 ..> U07c : <<include>>
+U13b ..> U13 : <<extend>>
+U07b -- S
+@enduml
