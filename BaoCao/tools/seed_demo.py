@@ -8,7 +8,6 @@ Chạy: python seed_demo.py
 import json
 import os
 import re
-import secrets
 import textwrap
 
 import requests
@@ -18,6 +17,7 @@ API = "http://localhost:3000/api"
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", "..", "QuanLyThuVien"))
 ACCOUNTS_FILE = os.path.join(HERE, "test_accounts.json")
+DEMO_PASSWORD = "123456"  # tài khoản demo chỉ chạy cục bộ: một mật khẩu chung cho dễ thao tác khi trình diễn
 COVER_DIR = os.path.join(HERE, "..", "demo_covers")
 
 
@@ -82,16 +82,16 @@ def main():
         accounts = json.load(open(ACCOUNTS_FILE, encoding="utf-8"))
     else:
         accounts = {
-            "librarian": {"fullName": "Nguyễn Thu Hà", "email": "thuthu.demo@fahasa-digital.test", "role": "librarian"},
-            "reader1": {"fullName": "Trần Minh Anh", "email": "minhanh.demo@fahasa-digital.test", "role": "reader",
+            "librarian": {"fullName": "Nguyễn Thu Hà", "email": "thuthu@demo.test", "role": "librarian"},
+            "reader1": {"fullName": "Trần Minh Anh", "email": "docgia1@demo.test", "role": "reader",
                         "phone": "0900000001", "address": "Hà Nội"},
-            "reader2": {"fullName": "Lê Hoàng Nam", "email": "hoangnam.demo@fahasa-digital.test", "role": "reader",
+            "reader2": {"fullName": "Lê Hoàng Nam", "email": "docgia2@demo.test", "role": "reader",
                         "phone": "0900000002", "address": "Hà Nội"},
-            "reader3": {"fullName": "Phạm Thu Trang", "email": "thutrang.demo@fahasa-digital.test", "role": "reader",
+            "reader3": {"fullName": "Phạm Thu Trang", "email": "docgia3@demo.test", "role": "reader",
                         "phone": "0900000003", "address": "Hà Nội"},
         }
         for a in accounts.values():
-            a["password"] = "Demo@" + secrets.token_hex(4)
+            a["password"] = DEMO_PASSWORD
         json.dump(accounts, open(ACCOUNTS_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     for key, a in accounts.items():
         r = admin.post(f"{API}/users/admin/users", json={k: a[k] for k in ("fullName", "email", "password", "role")})

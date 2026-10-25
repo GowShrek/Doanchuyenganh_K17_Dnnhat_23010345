@@ -199,7 +199,7 @@ Dựa trên các hạn chế, em đề xuất hướng phát triển theo thứ 
 
 1. **Khắc phục các khiếm khuyết còn lại:** các lỗi TC-13, TC-18, TC-26, TC-37, TC-44 theo hướng khắc phục ở mục 4.1.2, 4.1.3; bổ sung nút đăng nhập Google trên giao diện.
 2. **Bổ sung kiểm thử tự động** cho cả tầng Service và tầng giao diện, tích hợp vào quy trình tích hợp liên tục (CI).
-3. **Triển khai lên máy chủ thật** có tên miền và HTTPS, đặt múi giờ Việt Nam, và gắn volume cho thư mục ảnh bìa.
+3. **Triển khai lên máy chủ thật** có tên miền và HTTPS, đặt múi giờ Việt Nam, và sao lưu định kỳ hai volume dữ liệu (`db_data`, `uploads_data`).
 4. **Hoàn thiện các chức năng còn dang dở** theo README: thống kê nâng cao, xem danh sách sách theo tác giả, theo dõi lịch sử mượn của độc giả từ phía quản trị.
 5. **Mở rộng tính năng:** thông báo qua email hoặc đẩy (push), mượn và đọc tài liệu điện tử, ứng dụng di động, và cải thiện chất lượng gợi ý của trợ lý AI.
 

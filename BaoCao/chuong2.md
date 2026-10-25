@@ -109,7 +109,7 @@ Các yêu cầu phi chức năng (NFR – Non-functional Requirement) được �
 | NFR-05 | Bảo mật | Xác thực bằng token an toàn | JWT ký RS256 bằng cặp khóa riêng của từng người dùng; access token hết hạn sau 15 phút, refresh token sau 7 ngày; cookie đặt `HttpOnly`, `SameSite=Strict`, `Secure` khi chạy production |
 | NFR-06 | Bảo mật | Phân quyền và toàn vẹn dữ liệu | 100% API quản trị từ chối người dùng không đủ quyền; kết quả thanh toán và đăng nhập Google chỉ được chấp nhận khi đã xác thực chữ ký của bên thứ ba; mã OTP chỉ được gửi qua email |
 | NFR-07 | Bảo mật | Không lộ thông tin bí mật trong mã nguồn | Khóa API, mật khẩu cơ sở dữ liệu, khóa bí mật cổng thanh toán được nạp từ biến môi trường hoặc bảng cấu hình, không ghi cứng trong mã nguồn |
-| NFR-08 | Tin cậy | Dịch vụ tự phục hồi, dữ liệu bền vững | Container tự khởi động lại khi lỗi (`restart: unless-stopped`); máy chủ chỉ khởi động khi cơ sở dữ liệu đã sẵn sàng (healthcheck); dữ liệu MySQL lưu trong volume `db_data` và không mất khi tạo lại container |
+| NFR-08 | Tin cậy | Dịch vụ tự phục hồi, dữ liệu bền vững | Container tự khởi động lại khi lỗi (`restart: unless-stopped`); máy chủ chỉ khởi động khi cơ sở dữ liệu đã sẵn sàng (healthcheck); dữ liệu MySQL lưu trong volume `db_data`, ảnh tải lên lưu trong volume `uploads_data`, nên không mất khi tạo lại container |
 | NFR-09 | Khả dụng | Dễ sử dụng với người dùng phổ thông | Giao diện hoàn toàn bằng tiếng Việt; từ trang chi tiết sách, độc giả gửi được yêu cầu mượn trong không quá 3 thao tác; thông báo lỗi rõ ràng bằng tiếng Việt |
 | NFR-10 | Tương thích | Chạy trên các trình duyệt phổ biến | Hoạt động trên phiên bản mới của Chrome, Edge, Firefox; bố cục co giãn từ màn hình 375 px đến 1920 px |
 | NFR-11 | Triển khai | Triển khai bằng một lệnh | Toàn bộ hệ thống khởi chạy bằng `docker compose up -d`; máy chủ không cần cài sẵn Node.js hay MySQL |
@@ -129,7 +129,7 @@ Hệ thống hiện được triển khai trên máy tính cá nhân của em b�
 | Dịch vụ | Image / cách build | Cổng | Ghi chú |
 |---|---|---|---|
 | `db` | `mysql:8.0` | 3306 (chỉ trong mạng nội bộ Docker) | Healthcheck bằng `mysqladmin ping` mỗi 10 giây; dữ liệu lưu ở volume `db_data` |
-| `server` | Build từ `server/Dockerfile` trên nền `node:20-alpine` | 3000 | Script `wait-for-db.sh` chờ MySQL sẵn sàng, tạo tài khoản quản trị mặc định rồi khởi động API |
+| `server` | Build từ `server/Dockerfile` trên nền `node:20-alpine` | 3000 | Script `wait-for-db.sh` chờ MySQL sẵn sàng, tạo tài khoản quản trị mặc định rồi khởi động API; ảnh tải lên lưu ở volume `uploads_data` |
 | `client` | Build nhiều giai đoạn: `node:20-alpine` biên dịch React, `nginx:alpine` phục vụ tệp tĩnh | 5173 → 80 | Nginx chuyển mọi đường dẫn về `index.html` (SPA), nén gzip, lưu đệm tài nguyên 1 năm |
 
 Các ràng buộc triển khai cụ thể gồm:
@@ -138,7 +138,7 @@ Các ràng buộc triển khai cụ thể gồm:
 - **Kết nối Internet:** các chức năng trợ lý AI (Groq API), thanh toán (VNPay, MoMo), đăng nhập Google và gửi OTP qua Gmail đều phụ thuộc dịch vụ bên ngoài. Khi mất kết nối, các nghiệp vụ mượn – trả cốt lõi vẫn hoạt động.
 - **Cổng thanh toán chỉ ở môi trường thử nghiệm:** hệ thống dùng tài khoản sandbox của VNPay và MoMo. Kết quả thanh toán MoMo theo cơ chế IPN (máy chủ MoMo gọi về máy chủ của em) không hoạt động khi chạy trên `localhost`, nên hệ thống xử lý bổ sung ở bước chuyển hướng trình duyệt (`momoReturn`). Muốn nhận thanh toán thật, nhà sách phải ký hợp đồng với cổng thanh toán và triển khai máy chủ có tên miền công khai với HTTPS.
 - **Cấu hình theo môi trường:** địa chỉ giao diện được phép gọi API (CORS) lấy từ biến `URL_CLIENT`; cờ `Secure` của cookie chỉ bật khi `NODE_ENV=production`. Do đó, khi đưa lên Internet bắt buộc phải dùng HTTPS và đặt `NODE_ENV=production`.
-- **Lưu trữ tệp:** ảnh bìa sách được lưu trong thư mục `server/uploads` bên trong container server. Khi triển khai thật, thư mục này cần được gắn volume riêng để không mất ảnh khi build lại image.
+- **Lưu trữ tệp:** ảnh bìa sách và ảnh đại diện được lưu trong thư mục `server/uploads` của container server. Thư mục này được gắn volume `uploads_data`, nên ảnh không mất khi build lại image hay tạo lại container; chỉ mất khi chủ động xóa volume (ví dụ `docker compose down -v`). Khi triển khai thật, volume này cần được sao lưu định kỳ cùng với volume cơ sở dữ liệu.
 - **Múi giờ:** container chạy theo giờ UTC. Mã phiếu mượn và tác vụ nhắc hạn lúc 8:00 tính theo giờ của container, nên khi triển khai cần đặt múi giờ `Asia/Ho_Chi_Minh` (UTC+7).
 
 ### 2.3.2 Các ràng buộc kinh tế

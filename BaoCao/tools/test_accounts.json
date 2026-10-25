@@ -1,32 +1,39 @@
 {
   "librarian": {
     "fullName": "Nguyễn Thu Hà",
-    "email": "thuthu.demo@fahasa-digital.test",
+    "email": "thuthu@demo.test",
     "role": "librarian",
-    "password": "Demo@ce7317e7"
+    "password": "123456"
   },
   "reader1": {
     "fullName": "Trần Minh Anh",
-    "email": "minhanh.demo@fahasa-digital.test",
+    "email": "docgia1@demo.test",
     "role": "reader",
     "phone": "0900000001",
     "address": "Hà Nội",
-    "password": "Demo@8756c94f"
+    "password": "123456"
   },
   "reader2": {
     "fullName": "Lê Hoàng Nam",
-    "email": "hoangnam.demo@fahasa-digital.test",
+    "email": "docgia2@demo.test",
     "role": "reader",
     "phone": "0900000002",
     "address": "Hà Nội",
-    "password": "Demo@f53ce831"
+    "password": "123456"
   },
   "reader3": {
     "fullName": "Phạm Thu Trang",
-    "email": "thutrang.demo@fahasa-digital.test",
+    "email": "docgia3@demo.test",
     "role": "reader",
     "phone": "0900000003",
     "address": "Hà Nội",
-    "password": "Demo@c78a0227"
+    "password": "123456"
+  },
+  "registered_demo": {
+    "fullName": "Võ Thị Demo",
+    "email": "dangky@demo.test",
+    "role": "reader",
+    "phone": "0900000009",
+    "password": "123456"
   }
 }

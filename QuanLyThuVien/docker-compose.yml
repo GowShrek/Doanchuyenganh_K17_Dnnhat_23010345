@@ -54,6 +54,9 @@ services:
       MOMO_SECRET_KEY: ${MOMO_SECRET_KEY:-}
     ports:
       - "3000:3000"
+    volumes:
+      # ảnh bìa, ảnh đại diện người dùng tải lên: giữ lại khi build/tạo lại container
+      - uploads_data:/app/server/uploads
     networks:
       - thu_vien_net
 
@@ -77,6 +80,7 @@ services:
 
 volumes:
   db_data:
+  uploads_data:
 
 networks:
   thu_vien_net:

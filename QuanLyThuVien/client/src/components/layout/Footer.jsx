@@ -89,12 +89,9 @@ const Footer = () => {
 
       {/* Divider */}
       <div className="border-t border-white/10">
-        <div className="max-w-[1280px] mx-auto px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+        <div className="max-w-[1280px] mx-auto px-8 py-5 flex justify-center items-center">
           <p className="text-gray-500 text-xs">
             © 2024 Fahasa Digital University Library. All rights reserved.
-          </p>
-          <p className="text-gray-600 text-xs">
-            Được xây dựng với ❤️ dành cho sinh viên Việt Nam
           </p>
         </div>
       </div>
