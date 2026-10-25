@@ -21,6 +21,9 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import dayjs from 'dayjs';
 
+// Thời hạn một lần mượn tối đa (BR-11, máy chủ kiểm tra lại)
+const MAX_BORROW_DAYS = 30;
+
 // ── Image Carousel ────────────────────────────────────────────────
 const ImageCarousel = ({ images, title }) => {
     const [idx, setIdx] = useState(0);
@@ -376,8 +379,10 @@ const BookDetail = () => {
                             value={borrowDate}
                             onChange={(date) => {
                                 setBorrowDate(date);
-                                // Nếu ngày trả đang <= ngày mượn mới thì reset
-                                if (dueDate && date && dueDate.isBefore(date.add(1, 'day'))) setDueDate(null);
+                                // Ngày trả đang chọn không còn hợp lệ với ngày mượn mới (<= ngày mượn hoặc quá 30 ngày) thì reset
+                                const dueOutOfRange = dueDate && date && (dueDate.isBefore(date.add(1, 'day'))
+                                    || dueDate.isAfter(date.add(MAX_BORROW_DAYS, 'day').endOf('day')));
+                                if (dueOutOfRange) setDueDate(null);
                             }}
                             disabledDate={(d) => d && d.isBefore(dayjs().startOf('day'))}
                             format="DD/MM/YYYY"
@@ -398,9 +403,9 @@ const BookDetail = () => {
                             disabledDate={(d) => {
                                 if (!d) return false;
                                 const start = borrowDate || dayjs();
-                                // từ ngày sau ngày mượn đến tối đa 30 ngày (BR-11, máy chủ kiểm tra lại)
+                                // từ ngày sau ngày mượn đến tối đa MAX_BORROW_DAYS ngày
                                 return d.isBefore(start.add(1, 'day').startOf('day'))
-                                    || d.isAfter(start.add(30, 'day').endOf('day'));
+                                    || d.isAfter(start.add(MAX_BORROW_DAYS, 'day').endOf('day'));
                             }}
                             format="DD/MM/YYYY"
                             placeholder="Chọn ngày trả"

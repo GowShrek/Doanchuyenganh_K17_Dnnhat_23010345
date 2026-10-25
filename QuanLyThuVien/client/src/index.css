@@ -141,3 +141,8 @@ a:hover {
     margin: 5mm;
   }
 }
+
+/* Tooltip chỉ hiển thị chữ: không chặn chuột, nếu không nó che nút xác nhận của Popconfirm mở cùng phía trên nút */
+.ant-tooltip {
+  pointer-events: none;
+}
