@@ -3,7 +3,7 @@ import { Table, Tag, Tooltip, Popconfirm, message, Empty, Select, Image } from '
 import { Search, Plus, Pencil, Trash2, BookOpen, Eye, EyeOff, QrCode } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
-import { requestGetBooks, requestDeleteBook, requestToggleBookActive } from '../../config/bookRequest';
+import { requestGetBooksForStaff, requestDeleteBook, requestToggleBookActive } from '../../config/bookRequest';
 import { requestGetCategories } from '../../config/categoryRequest';
 import BookQRCode from '../../components/BookQRCode';
 
@@ -23,7 +23,7 @@ const BooksPage = () => {
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await requestGetBooks({ search, page, limit: 10, categoryId: categoryId || undefined });
+            const res = await requestGetBooksForStaff({ search, page, limit: 10, categoryId: categoryId || undefined });
             setData(res.metadata?.books || []);
             setTotal(res.metadata?.total || 0);
         } catch { message.error('Không thể tải danh sách sách'); }

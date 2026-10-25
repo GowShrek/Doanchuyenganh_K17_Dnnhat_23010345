@@ -6,7 +6,7 @@ import {
     requestGetAuthors, requestCreateAuthor, requestUpdateAuthor,
     requestDeleteAuthor, requestToggleAuthorActive,
 } from '../../config/authorRequest';
-import { requestGetBooks } from '../../config/bookRequest';
+import { requestGetBooksForStaff } from '../../config/bookRequest';
 
 const NATIONALITIES = ['Việt Nam', 'Hoa Kỳ', 'Anh Quốc', 'Pháp', 'Nhật Bản', 'Hàn Quốc', 'Trung Quốc', 'Nga', 'Đức', 'Brazil', 'Khác'];
 
@@ -36,7 +36,7 @@ const AuthorBooksModal = ({ open, onClose, author }) => {
     const fetchBooks = async (p = 1) => {
         setLoading(true);
         try {
-            const res = await requestGetBooks({ authorId: author.id, page: p, limit: 8 });
+            const res = await requestGetBooksForStaff({ authorId: author.id, page: p, limit: 8 });
             setBooks(res.metadata?.books || []);
             setTotal(res.metadata?.total || 0);
             setPage(p);

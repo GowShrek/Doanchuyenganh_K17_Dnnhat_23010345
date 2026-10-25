@@ -15,6 +15,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, Avatar, Spin } from 'antd';
 import { useAuth } from '../../contexts/AuthContext';
+import { getAvatarSrc } from '../../utils/avatar';
 import NotificationBell from './NotificationBell';
 
 const ROLE_LABEL = {
@@ -155,11 +156,7 @@ const Header = () => {
                                 <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
                                     <Avatar
                                         size={32}
-                                        src={
-                                            user.avatar
-                                                ? `${import.meta.env.VITE_URL_IMAGE}/src/uploads/avatars/${user.avatar}`
-                                                : null
-                                        }
+                                        src={getAvatarSrc(user.avatar)}
                                         style={{ backgroundColor: '#a30014' }}
                                     >
                                         {user.fullName?.[0]?.toUpperCase()}

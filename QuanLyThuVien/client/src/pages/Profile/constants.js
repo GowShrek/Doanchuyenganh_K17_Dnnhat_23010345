@@ -26,8 +26,4 @@ export const NAV_ITEMS = [
 
 export const fmt = (n) => Number(n || 0).toLocaleString('vi-VN') + 'đ';
 
-export const getAvatarSrc = (avatar) => {
-    if (!avatar) return null;
-    if (avatar.startsWith('http')) return avatar;
-    return `${import.meta.env.VITE_URL_IMAGE}/src/uploads/avatars/${avatar}`;
-};
+export { getAvatarSrc } from '../../utils/avatar';

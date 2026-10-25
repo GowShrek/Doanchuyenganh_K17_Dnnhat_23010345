@@ -36,7 +36,8 @@ router.post('/images', authAdminOrLibrarian, upload.array('images', 10), (req, r
 // DELETE /api/upload/image/:filename - Xóa ảnh
 router.delete('/image/:filename', authAdminOrLibrarian, (req, res, next) => {
     try {
-        const filePath = path.join(__dirname, '../../uploads', req.params.filename);
+        // basename bỏ mọi "../" trong tên tệp: chỉ xóa được tệp nằm ngay trong thư mục uploads
+        const filePath = path.join(__dirname, '../../uploads', path.basename(req.params.filename));
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
         new OK({ message: 'Đã xóa ảnh' }).send(res);
     } catch (err) { next(err); }

@@ -102,6 +102,7 @@ class UserService {
         const decoded = await verifyToken(refreshToken);
         const user = await User.findByPk(decoded.id);
         if (!user) throw new BadRequestError('User không tồn tại');
+        if (!user.isActive) throw new BadRequestError('Tài khoản đã bị khóa. Vui lòng liên hệ thủ thư');
 
         const token = await createToken({ id: user.id });
         return { token };

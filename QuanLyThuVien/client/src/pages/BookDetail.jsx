@@ -397,8 +397,10 @@ const BookDetail = () => {
                             onChange={setDueDate}
                             disabledDate={(d) => {
                                 if (!d) return false;
-                                const min = borrowDate ? borrowDate.add(1, 'day') : dayjs().add(1, 'day');
-                                return d.isBefore(min.startOf('day'));
+                                const start = borrowDate || dayjs();
+                                // từ ngày sau ngày mượn đến tối đa 30 ngày (BR-11, máy chủ kiểm tra lại)
+                                return d.isBefore(start.add(1, 'day').startOf('day'))
+                                    || d.isAfter(start.add(30, 'day').endOf('day'));
                             }}
                             format="DD/MM/YYYY"
                             placeholder="Chọn ngày trả"

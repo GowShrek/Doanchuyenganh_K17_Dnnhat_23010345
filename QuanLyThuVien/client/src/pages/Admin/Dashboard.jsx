@@ -4,6 +4,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import AdminLayout from '../../layouts/AdminLayout';
 import { requestGetDashboardStats } from '../../config/dashboardRequest';
 import { requestApproveBorrow, requestRejectBorrow } from '../../config/borrowRequest';
+import { getAvatarSrc } from '../../utils/avatar';
 import { message, Spin } from 'antd';
 import { BookOpen } from 'lucide-react';
 
@@ -215,7 +216,7 @@ const AdminDashboard = () => {
                             <div key={reader.id} className="flex items-center gap-3">
                                 <div className="text-gray-400 font-bold w-4 text-center">{idx + 1}</div>
                                 {reader.avatar ? (
-                                    <img src={reader.avatar} alt="" className="w-10 h-10 object-cover rounded-full" />
+                                    <img src={getAvatarSrc(reader.avatar)} alt="" className="w-10 h-10 object-cover rounded-full" />
                                 ) : (
                                     <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-full flex items-center justify-center font-bold">
                                         {reader.fullName?.[0]}

@@ -3,6 +3,7 @@ import { Table, Tag, Tooltip, Popconfirm, message, Empty, Avatar, Modal, Input, 
 import { Search, CheckCircle, Gift, BookOpen } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
 import { requestGetFines, requestGetFineStats, requestMarkFinePaid, requestWaiveFine } from '../../config/fineRequest';
+import { getAvatarSrc } from '../../utils/avatar';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -113,7 +114,7 @@ const FinesPage = () => {
             title: 'Độc giả', width: 220,
             render: (_, row) => (
                 <div className="flex items-center gap-2">
-                    <Avatar size={32} src={row.reader?.avatar} style={{ backgroundColor: '#a30014', fontSize: 12, fontWeight: 700 }}>
+                    <Avatar size={32} src={getAvatarSrc(row.reader?.avatar)} style={{ backgroundColor: '#a30014', fontSize: 12, fontWeight: 700 }}>
                         {!row.reader?.avatar && (row.reader?.fullName?.[0] || 'U')}
                     </Avatar>
                     <div className="min-w-0">

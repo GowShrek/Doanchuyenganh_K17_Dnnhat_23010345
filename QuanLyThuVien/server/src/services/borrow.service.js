@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const { sequelize } = require('../config/connectDB');
 const { Borrow, Book, User } = require('../models/index');
 const { BadRequestError, NotFoundError } = require('../core/error.response');
 
@@ -12,6 +13,17 @@ const generateBorrowCode = () => {
 
 // Ngày hôm nay (DATEONLY)
 const today = () => new Date().toISOString().split('T')[0];
+
+// Thời hạn mượn tối đa của một phiếu (BR-11); gia hạn thêm theo BR-04
+const MAX_BORROW_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Số lượng của đầu sách thay đổi theo tình trạng khi trả: hỏng vẫn về kho; mất thì không (BR-03)
+const RETURN_COUNTERS = {
+    normal: { availableQuantity: 1 },
+    damaged: { availableQuantity: 1, damagedQuantity: 1 },
+    lost: { lostQuantity: 1 },
+};
 
 // Hạn trả mặc định: +14 ngày
 const defaultDueDate = () => {
@@ -43,6 +55,9 @@ class BorrowService {
         if (!borrowDate) throw new BadRequestError('Vui lòng chọn ngày mượn');
         if (!dueDate) throw new BadRequestError('Vui lòng chọn ngày trả');
         if (new Date(dueDate) <= new Date(borrowDate)) throw new BadRequestError('Ngày trả phải sau ngày mượn');
+        if ((new Date(dueDate) - new Date(borrowDate)) / DAY_MS > MAX_BORROW_DAYS) {
+            throw new BadRequestError(`Thời hạn mượn tối đa ${MAX_BORROW_DAYS} ngày`);
+        }
 
         // Kiểm tra độc giả chưa có phiếu mượn cùng cuốn đang xử lý
         const existing = await Borrow.findOne({
@@ -126,17 +141,28 @@ class BorrowService {
         if (!borrow) throw new NotFoundError('Không tìm thấy phiếu mượn');
         if (borrow.status !== 'pending') throw new BadRequestError('Phiếu mượn không ở trạng thái chờ duyệt');
 
-        const book = await Book.findByPk(borrow.bookId);
-        if (!book || book.availableQuantity < 1) throw new BadRequestError('Sách hiện không còn trong kho');
+        // Duyệt và trừ kho trong cùng một transaction; mỗi lệnh chỉ ghi khi điều kiện còn đúng,
+        // để hai thủ thư duyệt cùng lúc không cho mượn vượt số bản trong kho
+        await sequelize.transaction(async (transaction) => {
+            const [claimed] = await Borrow.update({
+                status: 'approved',
+                // Giữ ngày độc giả đã chọn; nếu chưa có mới dùng mặc định
+                borrowDate: borrow.borrowDate || today(),
+                dueDate: borrow.dueDate || defaultDueDate(),
+                approvedBy,
+            }, { where: { id, status: 'pending' }, transaction });
+            if (!claimed) throw new BadRequestError('Phiếu mượn không ở trạng thái chờ duyệt');
 
-        await book.update({ availableQuantity: book.availableQuantity - 1 });
-        await borrow.update({
-            status: 'approved',
-            // Giữ ngày độc giả đã chọn; nếu chưa có mới dùng mặc định
-            borrowDate: borrow.borrowDate || today(),
-            dueDate: borrow.dueDate || defaultDueDate(),
-            approvedBy,
+            const [taken] = await Book.update(
+                { availableQuantity: sequelize.literal('availableQuantity - 1') },
+                { where: { id: borrow.bookId, availableQuantity: { [Op.gt]: 0 } }, transaction }
+            );
+            if (!taken) throw new BadRequestError('Sách hiện không còn trong kho');
         });
+
+        // Độc giả đang được giữ chỗ (đặt trước) nay đã mượn được: đóng lượt đặt trước
+        const ReservationService = require('./reservation.service');
+        await ReservationService.markFulfilled(borrow.bookId, borrow.userId);
 
         const updated = await Borrow.findByPk(id, { include: BORROW_INCLUDES });
 
@@ -173,19 +199,25 @@ class BorrowService {
         });
         if (!borrow) throw new NotFoundError('Không tìm thấy phiếu mượn');
         if (!['approved', 'overdue'].includes(borrow.status)) throw new BadRequestError('Phiếu mượn không ở trạng thái đang mượn');
+        if (!Object.hasOwn(RETURN_COUNTERS, condition)) throw new BadRequestError('Tình trạng sách không hợp lệ');
 
         const book = borrow.book || await Book.findByPk(borrow.bookId);
-        // Cộng lại kho nếu sách không mất
-        if (condition !== 'lost') {
-            await book.update({ availableQuantity: book.availableQuantity + 1 });
-        }
-
+        // Tính trước khi đổi trạng thái; so sánh chuỗi ngày YYYY-MM-DD nên trả đúng ngày hạn không bị tính quá hạn
+        const isOverdue = borrow.status === 'overdue' || (borrow.dueDate && borrow.dueDate < today());
         const finalStatus = condition === 'lost' ? 'lost' : 'returned';
-        await borrow.update({ status: finalStatus, returnDate: today(), returnedBy, note: note || borrow.note });
+
+        // Chốt phiếu và cộng kho trong một transaction, chỉ ghi khi phiếu vẫn đang mượn (tránh trả trùng)
+        await sequelize.transaction(async (transaction) => {
+            const [closed] = await Borrow.update(
+                { status: finalStatus, returnDate: today(), returnedBy, note: note || borrow.note },
+                { where: { id, status: { [Op.in]: ['approved', 'overdue'] } }, transaction }
+            );
+            if (!closed) throw new BadRequestError('Phiếu mượn không ở trạng thái đang mượn');
+            await Book.increment(RETURN_COUNTERS[condition], { where: { id: borrow.bookId }, transaction });
+        });
 
         // Tự động tạo phiếu phạt
         const FineService = require('./fine.service');
-        const isOverdue = borrow.status === 'overdue' || (borrow.dueDate && new Date(borrow.dueDate) < new Date());
 
         if (condition === 'lost') {
             await FineService.createFine({ borrowId: id, userId: borrow.userId, type: 'lost', bookPrice: book.price, dueDate: borrow.dueDate });

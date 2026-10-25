@@ -6,6 +6,7 @@ import {
 import { Search, CheckCircle, XCircle, RotateCcw, Eye, BookOpen, RefreshCw, Printer } from 'lucide-react';
 import AdminLayout from '../../layouts/AdminLayout';
 import BorrowSlipPrint from '../../components/admin/BorrowSlipPrint';
+import { getAvatarSrc } from '../../utils/avatar';
 import {
     requestGetBorrows, requestGetBorrowStats,
     requestApproveBorrow, requestRejectBorrow, requestReturnBook,
@@ -199,7 +200,7 @@ const BorrowsPage = () => {
             title: 'Độc giả', width: 200,
             render: (_, row) => (
                 <div className="flex items-center gap-2">
-                    <Avatar size={32} src={row.reader?.avatar} style={{ backgroundColor: '#a30014', fontSize: 12, fontWeight: 700 }}>
+                    <Avatar size={32} src={getAvatarSrc(row.reader?.avatar)} style={{ backgroundColor: '#a30014', fontSize: 12, fontWeight: 700 }}>
                         {!row.reader?.avatar && (row.reader?.fullName?.[0] || 'U')}
                     </Avatar>
                     <div className="min-w-0">

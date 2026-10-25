@@ -2,10 +2,15 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+
+// Ảnh đại diện nằm trong thư mục uploads (có volume), phục vụ tại /uploads/avatars/<tên tệp>
+const avatarDir = path.join(__dirname, '../../uploads/avatars');
+fs.mkdirSync(avatarDir, { recursive: true });
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/uploads/avatars');
+        cb(null, avatarDir);
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));

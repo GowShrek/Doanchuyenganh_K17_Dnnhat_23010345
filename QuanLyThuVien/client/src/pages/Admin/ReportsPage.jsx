@@ -3,7 +3,7 @@ import AdminLayout from '../../layouts/AdminLayout';
 import { Card, Button, message, Spin, Row, Col } from 'antd';
 import { Download, FileText, BookOpen, Users, RotateCcw, AlertTriangle, Receipt } from 'lucide-react';
 import { exportToExcel, exportToPDF } from '../../utils/exportUtils';
-import { requestGetBooks } from '../../config/bookRequest';
+import { requestGetBooksForStaff } from '../../config/bookRequest';
 import { requestGetAllUserWithFilter } from '../../config/userRequest';
 import { requestGetBorrows } from '../../config/borrowRequest';
 import { requestGetFines } from '../../config/fineRequest';
@@ -65,7 +65,7 @@ const ReportsPage = () => {
             // Fetch data based on report ID
             switch (reportId) {
                 case 'books':
-                    const booksRes = await requestGetBooks({ limit: 10000 });
+                    const booksRes = await requestGetBooksForStaff({ limit: 10000 });
                     data = booksRes.metadata?.books || [];
                     title = 'BÁO CÁO DANH SÁCH ĐẦU SÁCH';
                     filename = 'DanhSachSach';

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { message } from 'antd';
 import { Star, Edit3, Trash2, Loader2, Send, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getAvatarSrc } from '../utils/avatar';
 import {
     requestGetReviews,
     requestGetMyReview,
@@ -47,9 +48,7 @@ const DistBar = ({ star, count, total }) => {
 
 // ── Avatar placeholder ────────────────────────────────────────────
 const Avatar = ({ user }) => {
-    const src = user?.avatar
-        ? (user.avatar.startsWith('http') ? user.avatar : `${import.meta.env.VITE_URL_IMAGE}/src/uploads/avatars/${user.avatar}`)
-        : null;
+    const src = getAvatarSrc(user?.avatar);
     return (
         <div className="w-9 h-9 rounded-full overflow-hidden bg-red-50 border border-gray-100 shrink-0 flex items-center justify-center">
             {src

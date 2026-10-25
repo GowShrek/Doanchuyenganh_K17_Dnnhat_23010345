@@ -28,9 +28,7 @@ app.use(
     })
 );
 
-app.use(express.static(path.join(__dirname, '../src')));
-
-// Serve uploaded images
+// Serve uploaded images (ảnh bìa và ảnh đại diện; không phục vụ thư mục mã nguồn src)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes

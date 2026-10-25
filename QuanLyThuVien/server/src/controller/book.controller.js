@@ -3,6 +3,10 @@ const { OK, Created } = require('../core/success.response');
 
 class BookController {
     static async getAll(req, res) {
+        // API công khai luôn ẩn sách bị ẩn, bất kể tham số isActive gửi lên
+        new OK({ message: 'success', metadata: await BookService.getAll({ ...req.query, isActive: 'true' }) }).send(res);
+    }
+    static async getAllForStaff(req, res) {
         new OK({ message: 'success', metadata: await BookService.getAll(req.query) }).send(res);
     }
     static async getById(req, res) {
