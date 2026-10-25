@@ -14,7 +14,7 @@ Em xin chân thành cảm ơn!
 
 Em xin cam đoan đồ án “Xây dựng hệ thống quản lý thư viện cho nhà sách” là kết quả thực hiện của cá nhân em dưới sự hướng dẫn của TS. Nguyễn Thị Vân. Các nội dung phân tích, thiết kế, mã nguồn và kết quả kiểm thử trình bày trong báo cáo là trung thực, được thực hiện và đo đạc trên hệ thống do em xây dựng.
 
-Các tài liệu, số liệu và hình ảnh tham khảo từ nguồn khác đều được trích dẫn đầy đủ trong mục Tài liệu tham khảo. Việc sử dụng công cụ lập trình AI (Claude Code) để hỗ trợ xây dựng các kịch bản kiểm thử tự động cũng được ghi rõ trong báo cáo.
+Các tài liệu, số liệu và hình ảnh tham khảo từ nguồn khác đều được trích dẫn đầy đủ trong mục Tài liệu tham khảo. Việc sử dụng công cụ lập trình AI để hỗ trợ xây dựng các kịch bản kiểm thử tự động cũng được ghi rõ trong báo cáo.
 
 Nếu có bất kỳ sai phạm nào, em xin hoàn toàn chịu trách nhiệm trước nhà trường và hội đồng đánh giá.
 
