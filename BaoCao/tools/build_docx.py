@@ -15,7 +15,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_COLOR_INDEX, WD_LINE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
-from PIL import Image
+from PIL import Image, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(os.path.dirname(ROOT), "..", "CSE703014_Report_Template_VI_V1.docx")
@@ -35,11 +35,24 @@ DIAGRAM_DPI = 150  # ảnh PlantUML render ở 150 dpi: không phóng to quá k�
 
 COVER = {
     "team": "",  # đồ án cá nhân: không có Team ID
-    "title": "XÂY DỰNG HỆ THỐNG QUẢN LÝ THƯ VIỆN CHO NHÀ SÁCH",
-    "students": "Sinh viên thực hiện: ĐẶNG NHẤT NHẤT – MSSV: 23010345\nEmail: 23010345@st.phenikaa-uni.edu.vn",
-    "supervisor": "Giảng viên hướng dẫn: NGUYỄN THỊ VÂN",
+    "course": "TÊN HỌC PHẦN : ĐỒ ÁN CHUYÊN NGÀNH",
+    "title": "TÊN ĐỀ TÀI : XÂY DỰNG HỆ THỐNG QUẢN LÝ THƯ VIỆN CHO NHÀ SÁCH",
+    # khối thông tin dạng "nhãn  giá trị"; dòng sinh viên: (họ tên, MSSV, email)
+    "info": [
+        ("Giảng viên hướng dẫn:", "TS. Nguyễn Thị Vân"),
+        ("Sinh viên thực hiện:", None),
+        (None, ("Đặng Nhất Nhất", "23010345", "23010345@st.phenikaa-uni.edu.vn")),
+        ("Khoá:", "K17 – 2023 – 2027"),
+        ("Lớp tín chỉ:", "CSE703096-1-1-26(N03)"),
+        ("Chương trình đào tạo:", "Đại học chính quy"),
+    ],
+    "info_pt": 14,
+    "signer": "Đặng Nhất Nhất",
     "date": "Hà Nội, tháng 10 năm 2026",
 }
+# trang đầu báo cáo: Lời cảm ơn, Lời cam đoan (trước Mục lục) và Lời mở đầu (trước chương 1)
+FRONT_BEFORE_TOC = "loi_cam_on.md"
+FRONT_BEFORE_CHAPTERS = "loi_mo_dau.md"
 
 # ───────────────────────────── tiện ích XML ─────────────────────────────
 def set_run_font(run, size=None, bold=None, italic=None, name=FONT):
@@ -219,6 +232,7 @@ class Builder:
 
     def heading(self, level, text):
         is_appendix_title = level == 1 and text.strip().lower().startswith("phụ lục")
+        is_front = level == 1 and text.isupper()  # LỜI CẢM ƠN, LỜI CAM ĐOAN, LỜI MỞ ĐẦU
         if is_appendix_title:
             self.in_appendix = True
         if not self.in_appendix:
@@ -228,11 +242,20 @@ class Builder:
         p = self.doc.add_paragraph(style=f"Heading {level}")
         run = p.add_run(text)
         set_run_font(run)
-        if self.in_appendix:
-            # Trong phụ lục: không đánh số tự động (tiêu đề đã có sẵn "A", "A.1"...)
+        if self.in_appendix or is_front:
+            # Phụ lục và các trang đầu: không đánh số tự động (tiêu đề phụ lục đã có sẵn "A", "A.1"...)
             self._no_number(p)
-            if is_appendix_title:
+            if is_appendix_title or is_front:
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    def signature(self):
+        """Khối ký tên lệch phải cuối Lời cảm ơn, Lời cam đoan."""
+        for text, bold, italic in ((COVER["date"], False, True), ("Sinh viên thực hiện", True, False),
+                                   ("", False, False), ("", False, False), (COVER["signer"], True, False)):
+            p = self.doc.add_paragraph(style="Normal")
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.left_indent = Cm(8)
+            set_run_font(p.add_run(text), bold=bold, italic=italic)
 
     def subheading(self, text):
         p = self.doc.add_paragraph(style="Normal")
@@ -419,6 +442,9 @@ def render_markdown(b, text):
         elif s == "<!-- pagebreak -->":
             flush()
             b.page_break()
+        elif s == "<!-- ký tên -->":
+            flush()
+            b.signature()
         elif s == "<!-- landscape -->":
             flush()
             b.set_orientation(True)
@@ -496,17 +522,10 @@ def fill_cover(doc):
         r.add_break()
     r2 = p.add_run(COVER["title"])
     set_run_font(r2, size=16, bold=True, italic=True)
-    # các trường bìa theo kiểu "fontstyle21" của template: 16 pt, đậm, nghiêng (màu xám của template chỉ là màu chỗ cần điền)
-    for key, text in (("<DS sinh viên", COVER["students"]), ("<Supervisor>", COVER["supervisor"])):
-        para = find_para(doc, key)
-        first, *rest = text.split("\n")  # \n = xuống dòng trong cùng một trường bìa
-        set_para_text(para, first, size=16, bold=True)
-        run = para.runs[0]
-        for line in rest:
-            run.add_break()
-            run.add_text(line)
-        run.font.italic = True
-        run.font.color.rgb = RGBColor(0, 0, 0)
+    course = find_para(doc, "BÁO CÁO ĐỒ ÁN")
+    set_para_text(course, COVER["course"])
+    course.runs[0].add_break()  # một dòng trống giữa tên học phần và tên đề tài
+    fill_cover_info(doc)
     date_p = find_para(doc, "<date>")
     set_para_text(date_p, COVER["date"], size=10, bold=True)  # template: dòng ngày 10 pt, đậm
     # bớt vài dòng trống để bìa nằm gọn trong 1 trang
@@ -518,6 +537,49 @@ def fill_cover(doc):
             cur.getparent().remove(cur)
             removed += 1
     set_para_text(find_para(doc, "Content", "TOCEntry"), "MỤC LỤC")
+
+
+def fill_cover_info(doc):
+    """Thay hai chỗ điền <DS sinh viên>, <Supervisor> bằng khối "nhãn  giá trị" (nhãn đậm, cột thẳng hàng bằng tab),
+    cả khối canh giữa trang."""
+    pt = COVER["info_pt"]
+    fonts = {b: ImageFont.truetype(f"C:/Windows/Fonts/{'timesbd' if b else 'times'}.ttf", pt * 20) for b in (True, False)}
+    cm = lambda s, b=False: fonts[b].getlength(s) / 20 / 72 * 2.54
+    student = next(v for k, v in COVER["info"] if k is None)
+    val = max(cm(k, True) for k, _ in COVER["info"] if k) + 0.6  # cột giá trị
+    mail = val + cm(student[1]) + 0.9                             # cột email
+    left = (TEXT_WIDTH_CM - mail - cm(student[2])) / 2
+    assert left > 0, "khối thông tin bìa rộng hơn trang"
+
+    first = find_para(doc, "<DS sinh viên")._p
+    last = find_para(doc, "<Supervisor>")._p
+    for label, value in COVER["info"]:
+        p = doc.add_paragraph(style="No Spacing")
+        pf = p.paragraph_format
+        pf.line_spacing = 1.5
+        pf.left_indent = Cm(left + (0.4 if label is None else 0))
+        for pos in (val, mail):
+            pf.tab_stops.add_tab_stop(Cm(left + pos))
+        if label is None:
+            set_run_font(p.add_run("\t".join(value)), size=pt)
+        else:
+            set_run_font(p.add_run(label), size=pt, bold=True)
+            if value:
+                set_run_font(p.add_run("\t" + value), size=pt)
+        first.addprevious(p._p)
+    el = first
+    while True:  # bỏ hai chỗ điền mẫu và dòng trống giữa chúng
+        assert el is first or el is last or not "".join(el.itertext()).strip()
+        nxt, done = el.getnext(), el is last
+        el.getparent().remove(el)
+        el = nxt
+        if done:
+            break
+    for _ in range(2):  # khối mới dài hơn: bớt 2 dòng trống phía dưới để bìa vẫn gọn 1 trang
+        if el is not None and el.tag == qn("w:p") and not "".join(el.itertext()).strip():
+            nxt = el.getnext()
+            el.getparent().remove(el)
+            el = nxt
 
 
 def fill_assignment_table(doc, rows):
@@ -615,7 +677,15 @@ def main():
     strip_template_body(doc)
     strip_blank_before(doc)
     b = Builder(doc, ROOT)
-    for f in md_files:
+    toc_title = find_para(doc, "MỤC LỤC", "TOCEntry")
+    body = doc.element.body
+    start = len(body) - 1  # các đoạn mới được chèn ngay trước sectPr cuối
+    with open(os.path.join(ROOT, FRONT_BEFORE_TOC), encoding="utf-8") as fh:
+        render_markdown(b, fh.read())
+    for el in list(body)[start:-1]:  # chuyển Lời cảm ơn, Lời cam đoan lên trước Mục lục
+        toc_title._p.addprevious(el)
+    toc_title.paragraph_format.page_break_before = True
+    for f in [FRONT_BEFORE_CHAPTERS] + md_files:
         with open(os.path.join(ROOT, f), encoding="utf-8") as fh:
             render_markdown(b, fh.read())
     no_break_codes(doc)

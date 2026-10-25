@@ -1,6 +1,6 @@
 # Fahasa Digital – Hệ thống quản lý thư viện cho nhà sách
 
-Đồ án liên ngành (CSE703014) – Khoa Công nghệ Thông tin, Trường Đại học Phenikaa.
+Đồ án chuyên ngành (CSE703096) – Khoa Công nghệ Thông tin, Trường Đại học Phenikaa.
 Sinh viên thực hiện: Đặng Nhất Nhất.
 
 Hệ thống web quản lý toàn bộ vòng đời mượn sách của một nhà sách có khu thư viện: tra cứu, mượn – duyệt – gia hạn – đặt trước – trả sách, tự động tính phạt và thanh toán trực tuyến (VNPay, MoMo ở môi trường sandbox), nhắc hạn trả và trợ lý AI gợi ý sách.
