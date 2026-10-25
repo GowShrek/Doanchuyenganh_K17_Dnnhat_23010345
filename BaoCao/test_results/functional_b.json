@@ -1,6 +1,6 @@
 {
-  "run": "e8ebf3",
-  "utc_date": "2026-10-23",
+  "run": "01480c",
+  "utc_date": "2026-10-25",
   "rows": [
     {
       "id": "TC-31",
@@ -68,8 +68,8 @@
       "ref": "FR-32",
       "name": "Người được thông báo mượn sách",
       "expected": "Đặt trước chuyển fulfilled",
-      "actual": "trạng thái đặt trước = ['notified']",
-      "result": "Không đạt",
+      "actual": "trạng thái đặt trước = ['fulfilled']",
+      "result": "Đạt",
       "note": "markFulfilled() không được gọi khi duyệt mượn"
     },
     {
@@ -138,8 +138,8 @@
       "ref": "FR-18",
       "name": "Thống kê số bản đã mất của đầu sách",
       "expected": "lostQuantity = 1",
-      "actual": "lostQuantity = 0, damagedQuantity = 0",
-      "result": "Không đạt",
+      "actual": "lostQuantity = 1, damagedQuantity = 2",
+      "result": "Đạt",
       "note": "Trả sách mất/hỏng không cập nhật lostQuantity, damagedQuantity"
     },
     {
@@ -238,7 +238,7 @@
       "ref": "FR-27",
       "name": "Ô 'Quá hạn' trên trang Tổng quan",
       "expected": "≥ 1 (đang có phiếu quá hạn)",
-      "actual": "overdueBorrows = 12",
+      "actual": "overdueBorrows = 17",
       "result": "Đạt",
       "note": ""
     },
@@ -248,10 +248,10 @@
       "ref": "FR-16, NFR-03",
       "name": "Hỏi trợ lý AI gợi ý sách",
       "expected": "Trả lời tiếng Việt; sách gợi ý có trong CSDL; ≤ 10 giây",
-      "actual": "HTTP 200; 2 thẻ sách khớp CSDL; 2.89 giây; 2360 token",
+      "actual": "HTTP 200; 2 thẻ sách khớp CSDL; 2.49 giây; 2956 token",
       "result": "Đạt",
       "note": ""
     }
   ],
-  "ai_answer_excerpt": "Chào bạn! Dưới đây là 2 cuốn sách văn học nước ngoài hiện còn trong kho:\n\n- [ID:18] \"Kiêu Hãnh Và Định Kiến\" — Jane Austen  \n- [ID:27] \"1984\" — Eric Arthur Blair  \n\nChúc bạn đọc vui!"
+  "ai_answer_excerpt": "Chào bạn! Dưới đây là 2 cuốn sách văn học nước ngoài đang còn trong kho:\n\n- **[ID:28] \"Nhà Giả Kim\" — Paulo Coelho**\n- **[ID:18] \"Kiêu Hãnh Và Định Kiến\" — Jane Austen**\n\nHy vọng bạn sẽ thích!"
 }

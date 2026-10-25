@@ -77,7 +77,7 @@ Các yêu cầu chức năng (FR – Functional Requirement) được đánh mã
 
 ### 2.1.3 Quy tắc nghiệp vụ
 
-Các yêu cầu chức năng trên vận hành theo những quy tắc nghiệp vụ được cài đặt trực tiếp trong tầng Service của máy chủ. Bảng 2.6 liệt kê các quy tắc này (đánh mã BR-01 đến BR-10, BR – Business Rule) cùng vị trí cài đặt, để thuận tiện cho việc kiểm thử ở Chương 4.
+Các yêu cầu chức năng trên vận hành theo những quy tắc nghiệp vụ được cài đặt trực tiếp trong tầng Service của máy chủ. Bảng 2.6 liệt kê các quy tắc này (đánh mã BR-01 đến BR-11, BR – Business Rule) cùng vị trí cài đặt, để thuận tiện cho việc kiểm thử ở Chương 4.
 
 **Bảng 2.6: Các quy tắc nghiệp vụ**
 
@@ -93,6 +93,7 @@ Các yêu cầu chức năng trên vận hành theo những quy tắc nghiệp v
 | BR-08 | Nhắc hạn lúc 8:00 hằng ngày cho phiếu đến hạn sau 1 và 3 ngày | `server.js`, `notification.service.js` |
 | BR-09 | Điểm đánh giá là số nguyên từ 1 đến 5; trang chủ chỉ hiển thị đánh giá từ 4 sao trở lên và không bị ẩn | `review.service.js` |
 | BR-10 | Tài khoản tự đăng ký luôn có vai trò Độc giả; chỉ Quản trị viên được xóa tài khoản và dữ liệu danh mục | `users.service.js`, các tệp `*.routes.js` |
+| BR-11 | Thời hạn một lần mượn (từ ngày mượn đến ngày trả) tối đa 30 ngày; muốn dùng lâu hơn thì gia hạn theo BR-04 | `borrow.service.js` |
 
 ## 2.2 Các yêu cầu phi chức năng
 
@@ -209,19 +210,19 @@ Từ các yêu cầu chức năng ở mục 2.1, em xác định 19 ca sử dụ
 | UC-02 | Đăng nhập / đăng xuất | Khách, mọi người dùng | FR-02, FR-03 | 2.13 | Đạt 6/6; đã sửa SEC-01 |
 | UC-03 | Khôi phục mật khẩu | Khách | FR-04 | 2.14 | Đã sửa SEC-02 |
 | UC-04 | Tìm kiếm, xem chi tiết sách | Khách, Độc giả | FR-06, FR-07 | 2.15 | Đạt 1/1 |
-| UC-05 | Gửi yêu cầu mượn sách | Độc giả | FR-09, FR-10 | 2.16 | Đạt 3/4 |
+| UC-05 | Gửi yêu cầu mượn sách | Độc giả | FR-09, FR-10 | 2.16 | Đạt 4/4; đã sửa TC-26 |
 | UC-06 | Duyệt yêu cầu mượn | Thủ thư | FR-19, FR-15 | 2.17 | Đạt 5/5 |
-| UC-07 | Xác nhận trả sách | Thủ thư | FR-20, FR-31, FR-32 | 2.18 | Đạt 7/8 |
+| UC-07 | Xác nhận trả sách | Thủ thư | FR-20, FR-31, FR-32 | 2.18 | Đạt 8/8; đã sửa TC-44 |
 | UC-08 | Gia hạn sách | Độc giả, Thủ thư | FR-11, FR-21 | 2.19 | Đạt 4/4 |
-| UC-09 | Đặt trước sách | Độc giả | FR-12, FR-23 | 2.20 | Đạt 5/6; đã sửa SEC-05 |
+| UC-09 | Đặt trước sách | Độc giả | FR-12, FR-23 | 2.20 | Đạt 6/6; đã sửa SEC-05, TC-37 |
 | UC-10 | Thanh toán tiền phạt | Độc giả, Thủ thư | FR-13, FR-22 | 2.21 | Đạt 4/4; đã sửa SEC-03, SEC-06 |
 | UC-11 | Đánh giá sách | Độc giả | FR-14, FR-25 | 2.22 | Đạt 3/3 |
 | UC-12 | Trò chuyện với trợ lý AI | Khách, Độc giả | FR-16 | 2.23 | Đạt 1/1 |
-| UC-13 | Quản lý đầu sách | Thủ thư | FR-17, FR-18 | 2.24 | Đạt 3/4 |
+| UC-13 | Quản lý đầu sách | Thủ thư | FR-17, FR-18 | 2.24 | Đạt 4/4; đã sửa TC-18 |
 | UC-14 | Quản lý độc giả, tài khoản | Thủ thư, Quản trị viên | FR-24, FR-29 | 2.25 | Đạt 2/2 |
 | UC-15 | Thống kê, xuất báo cáo | Thủ thư | FR-27, FR-28 | 2.26 | Đạt 1/1 |
 | UC-16 | Nhắc hạn trả tự động | Hệ thống | FR-33, FR-15 | 2.27 | Đạt 2/2; đã sửa SEC-04 |
-| UC-17 | Cấu hình hệ thống | Quản trị viên | FR-30 | 2.28 | Đạt 0/1 |
+| UC-17 | Cấu hình hệ thống | Quản trị viên | FR-30 | 2.28 | Đạt 1/1; đã sửa TC-13 |
 | UC-18 | Quản lý hồ sơ cá nhân | Độc giả | FR-05 | 2.29 | – |
 | UC-19 | Xem tin tức, gửi liên hệ | Khách, Độc giả, Thủ thư | FR-08, FR-26 | 2.30 | – |
 
@@ -297,7 +298,7 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 | Ngoại lệ | **E1** (bước 3): không có kết quả → hiển thị thông báo không tìm thấy sách. |
 | Hậu điều kiện | Không thay đổi dữ liệu. |
 | Thiết kế liên quan | Giao diện: Hình 2.21, Hình 2.22. Hoạt động: Hình 2.17. |
-| Kiểm thử | TC-16 đạt (1/1). Lưu ý: sách bị ẩn vẫn có thể xuất hiện ở bước 3 khi ứng dụng khách không truyền tham số lọc (TC-18, xem UC-13). |
+| Kiểm thử | TC-16 đạt (1/1). Sách bị ẩn không xuất hiện ở bước 3 (TC-18 đã khắc phục, xem UC-13). |
 
 **Bảng 2.16: Đặc tả UC-05 – Gửi yêu cầu mượn sách**
 
@@ -305,14 +306,14 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 |---|---|
 | Mục tiêu | Độc giả đăng ký mượn một đầu sách còn trong kho từ xa, không cần đến quầy để hỏi. |
 | Tác nhân | Chính: Độc giả. |
-| Yêu cầu liên quan | FR-09, FR-10; BR-06 |
+| Yêu cầu liên quan | FR-09, FR-10; BR-06, BR-11 |
 | Tiền điều kiện | Độc giả đã đăng nhập; sách còn ít nhất 1 bản trong kho. |
-| Luồng chính | 1. Độc giả nhấn "Gửi yêu cầu mượn" trên trang chi tiết sách.<br>2. Hộp thoại hiện ra, độc giả chọn ngày mượn và ngày trả.<br>3. Độc giả nhấn "Xác nhận gửi yêu cầu".<br>4. Hệ thống kiểm tra sách còn trong kho, ngày trả sau ngày mượn, và độc giả chưa có phiếu đang xử lý cho đầu sách này (BR-06).<br>5. Hệ thống tạo phiếu mượn trạng thái "Chờ duyệt" với mã `BM-YYYYMMDD-XXXXX`.<br>6. Hệ thống gửi thông báo cho tất cả Thủ thư và Quản trị viên.<br>7. Phiếu xuất hiện trong mục "Lịch sử mượn" của độc giả. |
+| Luồng chính | 1. Độc giả nhấn "Gửi yêu cầu mượn" trên trang chi tiết sách.<br>2. Hộp thoại hiện ra, độc giả chọn ngày mượn và ngày trả.<br>3. Độc giả nhấn "Xác nhận gửi yêu cầu".<br>4. Hệ thống kiểm tra sách còn trong kho, ngày trả sau ngày mượn, thời hạn mượn không quá 30 ngày (BR-11), và độc giả chưa có phiếu đang xử lý cho đầu sách này (BR-06).<br>5. Hệ thống tạo phiếu mượn trạng thái "Chờ duyệt" với mã `BM-YYYYMMDD-XXXXX`.<br>6. Hệ thống gửi thông báo cho tất cả Thủ thư và Quản trị viên.<br>7. Phiếu xuất hiện trong mục "Lịch sử mượn" của độc giả. |
 | Luồng thay thế | Không có. |
-| Ngoại lệ | **E1** (bước 4): sách đã hết → "Sách hiện không còn trong kho".<br>**E2** (bước 4): ngày trả không sau ngày mượn → "Ngày trả phải sau ngày mượn".<br>**E3** (bước 4): đã có phiếu đang xử lý → "Bạn đang có phiếu mượn cuốn sách này chưa xử lý xong". |
+| Ngoại lệ | **E1** (bước 4): sách đã hết → "Sách hiện không còn trong kho".<br>**E2** (bước 4): ngày trả không sau ngày mượn → "Ngày trả phải sau ngày mượn".<br>**E3** (bước 4): đã có phiếu đang xử lý → "Bạn đang có phiếu mượn cuốn sách này chưa xử lý xong".<br>**E4** (bước 4): thời hạn mượn quá 30 ngày → "Thời hạn mượn tối đa 30 ngày" (ô chọn ngày trả cũng không cho chọn quá 30 ngày). |
 | Hậu điều kiện | Một bản ghi `borrows` trạng thái `pending`; số lượng trong kho chưa thay đổi. |
 | Thiết kế liên quan | Giao diện: Hình 2.22, Hình 2.23, Hình 2.25. Tuần tự: Hình 2.13. Hoạt động: Hình 2.17. Trạng thái phiếu: Hình 2.10. |
-| Kiểm thử | TC-19, TC-20, TC-21 đạt (3/4). Không đạt: TC-26, bước 4 chưa giới hạn thời hạn mượn và chưa chặn ngày mượn trong quá khứ. |
+| Kiểm thử | TC-19, TC-20, TC-21, TC-26 đạt (4/4). TC-26 không đạt ở lần chạy lại thứ nhất (chưa giới hạn thời hạn mượn), đã đạt sau khi thêm BR-11. Ngày mượn trong quá khứ hiện mới được chặn ở giao diện. |
 
 **Bảng 2.17: Đặc tả UC-06 – Duyệt yêu cầu mượn**
 
@@ -342,7 +343,7 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 | Ngoại lệ | **E1** (bước 3): phiếu không ở trạng thái đang mượn → báo lỗi. |
 | Hậu điều kiện | Phiếu ở trạng thái `returned` hoặc `lost`; có thể phát sinh bản ghi `fines` trạng thái `unpaid` và thông báo cho người trong hàng chờ. |
 | Thiết kế liên quan | Giao diện: Hình 2.31, Hình 2.32. Tuần tự: Hình 2.14. Hoạt động: Hình 2.18. Trạng thái phiếu: Hình 2.10. |
-| Kiểm thử | TC-35, TC-36, TC-39 đến TC-43 đạt (7/8). Không đạt: TC-44, luồng A1, A2 không cập nhật số bản hỏng, số bản mất của đầu sách. |
+| Kiểm thử | TC-35, TC-36, TC-39 đến TC-44 đạt (8/8). TC-44 không đạt ở lần chạy lại thứ nhất (luồng A1, A2 không cập nhật số bản hỏng, số bản mất), đã đạt sau khi khắc phục. |
 
 **Bảng 2.19: Đặc tả UC-08 – Gia hạn sách**
 
@@ -372,7 +373,7 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 | Ngoại lệ | **E1** (bước 2): sách vẫn còn → "Sách vẫn còn trong kho, bạn có thể mượn trực tiếp".<br>**E2** (bước 2): đã đặt trước → "Bạn đã đặt trước sách này rồi". |
 | Hậu điều kiện | Bản ghi `reservations` được tạo hoặc cập nhật. |
 | Thiết kế liên quan | Giao diện: Hình 2.24. Hoạt động: Hình 2.19. Trạng thái: Hình 2.11. |
-| Kiểm thử | TC-31 đến TC-34, TC-38 đạt (5/6). Không đạt: TC-37, người được thông báo đã mượn sách nhưng đặt trước không chuyển sang trạng thái `fulfilled` (hoàn tất). SEC-05 (giữ chỗ 48 giờ không tự hết hạn) đã khắc phục ở UC-16. |
+| Kiểm thử | TC-31 đến TC-34, TC-37, TC-38 đạt (6/6). TC-37 không đạt ở lần chạy lại thứ nhất (đặt trước không chuyển sang `fulfilled` khi người được thông báo đã mượn), đã đạt sau khi khắc phục. SEC-05 (giữ chỗ 48 giờ không tự hết hạn) đã khắc phục ở UC-16. |
 
 **Bảng 2.21: Đặc tả UC-10 – Thanh toán tiền phạt**
 
@@ -432,7 +433,7 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 | Ngoại lệ | **E1** (bước 3): ISBN đã tồn tại → "ISBN đã tồn tại". |
 | Hậu điều kiện | Bảng `books`, `book_authors`, `book_genres` được cập nhật. |
 | Thiết kế liên quan | Giao diện: Hình 2.30. |
-| Kiểm thử | TC-14, TC-15, TC-17 đạt (3/4). Không đạt: TC-18, sách bị ẩn (A2) vẫn được API tra cứu công khai trả về nếu ứng dụng khách không truyền tham số lọc. |
+| Kiểm thử | TC-14, TC-15, TC-17, TC-18 đạt (4/4). TC-18 không đạt ở lần chạy lại thứ nhất (sách bị ẩn vẫn được API công khai trả về), đã đạt sau khi API công khai luôn lọc sách ẩn và trang quản trị dùng API riêng `GET /api/books/manage`. |
 
 **Bảng 2.25: Đặc tả UC-14 – Quản lý độc giả, tài khoản**
 
@@ -492,7 +493,7 @@ Mỗi ca sử dụng được đặc tả theo cùng một mẫu (Bảng 2.12 đ
 | Ngoại lệ | **E1** (bước 4): thiếu trường bắt buộc → biểu mẫu báo lỗi. |
 | Hậu điều kiện | Các dịch vụ gửi OTP và trợ lý AI dùng cấu hình mới ở lần gọi tiếp theo. |
 | Thiết kế liên quan | Giao diện: trang "Cấu hình hệ thống" (Bảng 2.33). |
-| Kiểm thử | Không đạt (0/1): TC-13, Thủ thư cũng đọc được cấu hình, trái với tiền điều kiện chỉ dành cho Quản trị viên. |
+| Kiểm thử | TC-13 đạt (1/1). Ở lần chạy lại thứ nhất, Thủ thư cũng đọc được cấu hình, trái với tiền điều kiện; đã khắc phục bằng cách chỉ cho Quản trị viên truy cập. |
 
 **Bảng 2.29: Đặc tả UC-18 – Quản lý hồ sơ cá nhân**
 

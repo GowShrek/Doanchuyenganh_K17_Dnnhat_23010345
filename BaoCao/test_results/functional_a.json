@@ -1,6 +1,6 @@
 {
-  "run": "7cd110",
-  "utc_date": "2026-10-23",
+  "run": "40e1e2",
+  "utc_date": "2026-10-25",
   "rows": [
     {
       "id": "TC-01",
@@ -128,8 +128,8 @@
       "ref": "FR-30",
       "name": "Thủ thư đọc cấu hình hệ thống (khóa API, OAuth)",
       "expected": "401/403 (chỉ Quản trị viên)",
-      "actual": "HTTP 200, trả về 6 khóa cấu hình",
-      "result": "Không đạt",
+      "actual": "HTTP 401, trả về 0 khóa cấu hình",
+      "result": "Đạt",
       "note": "Route /api/system-configs dùng authAdminOrLibrarian"
     },
     {
@@ -178,8 +178,8 @@
       "ref": "FR-18",
       "name": "Sách bị ẩn không xuất hiện ở API tra cứu công khai",
       "expected": "Không trả về sách bị ẩn",
-      "actual": "có isActive=true: không trả về; không truyền tham số: trả về",
-      "result": "Không đạt",
+      "actual": "có isActive=true: không trả về; không truyền tham số: không trả về",
+      "result": "Đạt",
       "note": "Máy chủ chỉ lọc sách ẩn khi client truyền isActive=true"
     },
     {
@@ -188,7 +188,7 @@
       "ref": "FR-09",
       "name": "Gửi yêu cầu mượn hợp lệ",
       "expected": "status pending; mã BM-YYYYMMDD-XXXXX",
-      "actual": "HTTP 201; status=pending; mã=BM-20261023-45340",
+      "actual": "HTTP 201; status=pending; mã=BM-20261025-68890",
       "result": "Đạt",
       "note": ""
     },
@@ -258,8 +258,8 @@
       "ref": "FR-09",
       "name": "Chọn thời hạn mượn bất thường (800 ngày, ngày mượn trong quá khứ)",
       "expected": "Bị từ chối theo quy định thời hạn mượn",
-      "actual": "HTTP 201 – Gửi yêu cầu mượn thành công",
-      "result": "Không đạt",
+      "actual": "HTTP 400 – Thời hạn mượn tối đa 30 ngày",
+      "result": "Đạt",
       "note": "Hệ thống chưa giới hạn thời hạn mượn và chưa chặn ngày mượn trong quá khứ"
     },
     {
@@ -287,8 +287,8 @@
       "group": "Gia hạn",
       "ref": "FR-11, FR-21",
       "name": "Gửi và duyệt gia hạn 2 lần",
-      "expected": "dueDate = 2026-11-20; renewCount = 2",
-      "actual": "dueDate = 2026-11-20; renewCount = 2",
+      "expected": "dueDate = 2026-11-22; renewCount = 2",
+      "actual": "dueDate = 2026-11-22; renewCount = 2",
       "result": "Đạt",
       "note": ""
     },
@@ -303,5 +303,5 @@
       "note": ""
     }
   ],
-  "book_id": 44
+  "book_id": 75
 }

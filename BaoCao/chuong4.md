@@ -29,21 +29,21 @@ Các kịch bản kiểm thử tự động được xây dựng với sự hỗ
 
 ### 4.1.2 Kiểm thử chức năng
 
-Em xây dựng 55 ca kiểm thử chức năng (test case, đánh mã TC-01 đến TC-55), phủ 22 trong số 33 yêu cầu chức năng, tập trung vào các nghiệp vụ cốt lõi và các quy tắc nghiệp vụ BR-01 đến BR-10. Bộ kiểm thử được chạy hai lần: lần đầu đạt 48/55 ca; sau khi khắc phục các khiếm khuyết SEC-01 đến SEC-05 (mục 4.1.3), em chạy lại toàn bộ và đạt 50/55 ca. Bảng 4.2 tổng hợp kết quả lần chạy lại.
+Em xây dựng 55 ca kiểm thử chức năng (test case, đánh mã TC-01 đến TC-55), phủ 22 trong số 33 yêu cầu chức năng, tập trung vào các nghiệp vụ cốt lõi và các quy tắc nghiệp vụ BR-01 đến BR-11. Bộ kiểm thử được chạy ba lần: lần đầu đạt 48/55 ca; sau khi khắc phục các khiếm khuyết SEC-01 đến SEC-05 (mục 4.1.3), lần chạy lại thứ nhất đạt 50/55 ca; sau khi khắc phục tiếp năm khiếm khuyết còn lại (TC-13, TC-18, TC-26, TC-37, TC-44), lần chạy cuối cùng đạt 55/55 ca. Bảng 4.2 tổng hợp kết quả của lần chạy lại thứ nhất và lần chạy cuối.
 
 **Bảng 4.2: Tổng hợp kết quả kiểm thử chức năng**
 
-| Nhóm chức năng | Số ca | Đạt | Không đạt |
+| Nhóm chức năng | Số ca | Đạt (lần chạy lại thứ nhất) | Đạt (lần chạy cuối) |
 |---|---|---|---|
-| Tài khoản và phân quyền | 13 | 12 | 1 |
-| Quản lý sách | 5 | 4 | 1 |
-| Mượn và gia hạn | 12 | 11 | 1 |
-| Đặt trước | 8 | 7 | 1 |
-| Trả sách và tính phạt | 7 | 6 | 1 |
-| Đánh giá | 3 | 3 | 0 |
-| Thông báo và nhắc hạn | 4 | 4 | 0 |
-| Thống kê và trợ lý AI | 3 | 3 | 0 |
-| **Tổng cộng** | **55** | **50** | **5** |
+| Tài khoản và phân quyền | 13 | 12 | 13 |
+| Quản lý sách | 5 | 4 | 5 |
+| Mượn và gia hạn | 12 | 11 | 12 |
+| Đặt trước | 8 | 7 | 8 |
+| Trả sách và tính phạt | 7 | 6 | 7 |
+| Đánh giá | 3 | 3 | 3 |
+| Thông báo và nhắc hạn | 4 | 4 | 4 |
+| Thống kê và trợ lý AI | 3 | 3 | 3 |
+| **Tổng cộng** | **55** | **50** | **55** |
 
 Các kết quả nổi bật đã được kiểm chứng (đạt):
 
@@ -54,13 +54,13 @@ Các kết quả nổi bật đã được kiểm chứng (đạt):
 - **Nhắc hạn và quá hạn (BR-08).** Sau khi khắc phục, phiếu trễ hạn được chuyển sang trạng thái quá hạn, người mượn nhận thông báo quá hạn và ô "Quá hạn" trên trang Tổng quan phản ánh đúng (TC-52 đến TC-54).
 - **Trợ lý AI.** Trả lời bằng tiếng Việt và gợi ý đúng sách có trong cơ sở dữ liệu, thời gian phản hồi khoảng 1,3–1,7 giây (TC-55).
 
-Năm ca còn không đạt đều phản ánh các khiếm khuyết thật chưa được khắc phục, được phân tích ở mục 4.1.3 và tổng hợp ở mục 4.3:
+Năm ca không đạt ở lần chạy lại thứ nhất đều phản ánh khiếm khuyết thật. Em đã khắc phục cả năm và kiểm chứng bằng lần chạy cuối:
 
-- **TC-13 (FR-30):** thủ thư đọc được cấu hình hệ thống (khóa API, OAuth), do API cấu hình cho phép cả vai trò Thủ thư.
-- **TC-18 (FR-18):** sách bị ẩn vẫn xuất hiện ở API tra cứu công khai nếu ứng dụng khách không truyền tham số lọc.
-- **TC-26 (FR-09):** hệ thống chấp nhận thời hạn mượn 800 ngày và ngày mượn trong quá khứ.
-- **TC-37 (FR-32):** độc giả đứng đầu hàng chờ đã mượn được sách, nhưng đặt trước vẫn ở trạng thái `notified` thay vì chuyển sang `fulfilled` (hoàn tất).
-- **TC-44 (FR-18):** trả sách mất hoặc hỏng không cập nhật số bản mất, số bản hỏng của đầu sách.
+- **TC-13 (FR-30):** thủ thư đọc (và sửa) được cấu hình hệ thống (khóa API, OAuth), do API cấu hình cho phép cả vai trò Thủ thư. Khắc phục: API cấu hình chỉ dành cho Quản trị viên (middleware `authAdmin`).
+- **TC-18 (FR-18):** sách bị ẩn vẫn xuất hiện ở API tra cứu công khai nếu ứng dụng khách không truyền tham số lọc. Khắc phục: API công khai luôn chỉ trả về sách đang hiển thị; các trang quản trị dùng API riêng `GET /api/books/manage` (chỉ Thủ thư, Quản trị viên) để vẫn thấy và bật lại sách đang ẩn.
+- **TC-26 (FR-09):** hệ thống chấp nhận thời hạn mượn 800 ngày. Khắc phục: thêm quy tắc BR-11, thời hạn một lần mượn tối đa 30 ngày; máy chủ kiểm tra quy tắc này và ô chọn ngày trả trên giao diện cũng giới hạn theo. Ngày mượn trong quá khứ hiện mới được chặn ở giao diện; máy chủ vẫn chấp nhận vì các kịch bản kiểm thử dùng ngày mượn trong quá khứ để tạo phiếu quá hạn.
+- **TC-37 (FR-32):** độc giả đứng đầu hàng chờ đã mượn được sách, nhưng đặt trước vẫn ở trạng thái `notified` thay vì chuyển sang `fulfilled` (hoàn tất). Nguyên nhân: hàm `markFulfilled` đã được viết nhưng không có nơi gọi (cùng loại lỗi với SEC-04, SEC-05). Khắc phục: gọi hàm này khi thủ thư duyệt phiếu mượn.
+- **TC-44 (FR-18):** trả sách mất hoặc hỏng không cập nhật số bản mất, số bản hỏng của đầu sách. Khắc phục: khi xác nhận trả, hệ thống tăng `lostQuantity` hoặc `damagedQuantity` theo tình trạng sách, trong cùng giao dịch cập nhật kho.
 
 Hai ca TC-53 (phiếu quá hạn không được đánh dấu và nhắc) và TC-54 (ô "Quá hạn" luôn bằng 0) không đạt ở lần chạy đầu, và đã đạt sau khi khắc phục SEC-04.
 
@@ -89,13 +89,13 @@ Lần rà soát mã nguồn đầu tiên phát hiện sáu khiếm khuyết bả
 
 Lần kiểm chứng này chưa bao gồm một giao dịch thật trên môi trường sandbox của VNPay, MoMo và chưa thử đăng nhập bằng tài khoản Google thật sau khi sửa.
 
-Ngoài ra, kiểm thử chức năng và rà soát mã nguồn còn phát hiện ba vấn đề về phân quyền, logic và giao diện:
+Ngoài ra, kiểm thử chức năng và rà soát mã nguồn còn phát hiện ba vấn đề về phân quyền, logic và giao diện; hai vấn đề đầu đã được khắc phục:
 
-- **Thủ thư đọc được cấu hình hệ thống (TC-13).** Route `/api/system-configs` dùng middleware `authAdminOrLibrarian`, nên thủ thư cũng đọc được các khóa API và thông tin OAuth, trong khi theo thiết kế (FR-30) đây là quyền của Quản trị viên. Hướng khắc phục: đổi sang middleware `authAdmin`.
-- **Sách bị ẩn vẫn xuất hiện ở API tra cứu công khai (TC-18).** Máy chủ chỉ lọc sách ẩn khi ứng dụng khách truyền tham số `isActive=true`; nếu không truyền, sách đã ẩn vẫn được trả về. Hướng khắc phục: với người dùng chưa đăng nhập hoặc là độc giả, luôn mặc định chỉ trả về sách đang hiển thị.
+- **Thủ thư đọc được cấu hình hệ thống (TC-13).** Route `/api/system-configs` dùng middleware `authAdminOrLibrarian`, nên thủ thư cũng đọc và sửa được các khóa API và thông tin OAuth, trong khi theo thiết kế (FR-30) đây là quyền của Quản trị viên. Đã khắc phục: đổi sang middleware `authAdmin`.
+- **Sách bị ẩn vẫn xuất hiện ở API tra cứu công khai (TC-18).** Máy chủ chỉ lọc sách ẩn khi ứng dụng khách truyền tham số `isActive=true`; nếu không truyền, sách đã ẩn vẫn được trả về. Đã khắc phục: API công khai luôn chỉ trả về sách đang hiển thị, trang quản trị dùng API riêng có phân quyền.
 - **Giao diện chưa có nút đăng nhập Google.** Hàm gọi API `requestLoginGoogle` đã được viết ở phía giao diện nhưng chưa được màn hình nào sử dụng, nên FR-03 hiện chỉ dùng được qua API. Hướng khắc phục: thêm nút đăng nhập Google (thư viện `@react-oauth/google` đã được cài) vào trang đăng nhập.
 
-Bên cạnh các khiếm khuyết, em cũng xác nhận một số biện pháp bảo mật đã được cài đặt đúng: mật khẩu băm bằng bcrypt (SEC-07 đạt, NFR-04), token ký RS256 và bị thu hồi khi đăng xuất (NFR-05), cookie đặt `HttpOnly` và `SameSite=Strict` (TC-05), phân quyền theo vai trò hoạt động ở hầu hết các API (TC-10 đến TC-12).
+Bên cạnh các khiếm khuyết, em cũng xác nhận một số biện pháp bảo mật đã được cài đặt đúng: mật khẩu băm bằng bcrypt (SEC-07 đạt, NFR-04), token ký RS256 và bị thu hồi khi đăng xuất (NFR-05), cookie đặt `HttpOnly` và `SameSite=Strict` (TC-05), phân quyền theo vai trò hoạt động ở các API đã kiểm thử (TC-10 đến TC-13).
 
 ### 4.1.4 Kiểm thử hiệu năng
 
@@ -129,7 +129,7 @@ Bảng 4.5 và Bảng 4.6 đối chiếu mức độ hoàn thành của các yê
 | FR-06 | Tìm kiếm và lọc sách | Đạt | TC-16 |
 | FR-07 | Xem chi tiết sách | Đạt | TC-50, PERF-02 |
 | FR-08 | Xem tin tức, gửi liên hệ | Đạt | Dữ liệu demo đã tạo |
-| FR-09 | Gửi yêu cầu mượn sách | Đạt một phần | Đúng với dữ liệu hợp lệ; chưa giới hạn thời hạn mượn và chưa chặn ngày mượn quá khứ (TC-26) |
+| FR-09 | Gửi yêu cầu mượn sách | Đạt | Đúng với dữ liệu hợp lệ; thời hạn mượn tối đa 30 ngày (BR-11, TC-26 đã khắc phục); ngày mượn trong quá khứ mới chặn ở giao diện |
 | FR-10 | Theo dõi lịch sử mượn | Đạt | TC-19, Hình 2.25 |
 | FR-11 | Gửi và duyệt gia hạn | Đạt | TC-27 đến TC-30 |
 | FR-12 | Đặt trước sách | Đạt | TC-31 đến TC-34, TC-38 |
@@ -138,24 +138,24 @@ Bảng 4.5 và Bảng 4.6 đối chiếu mức độ hoàn thành của các yê
 | FR-15 | Nhận và quản lý thông báo | Đạt | TC-24, TC-52 |
 | FR-16 | Trò chuyện với trợ lý AI | Đạt | TC-55 |
 | FR-17 | Quản lý danh mục, thể loại, tác giả, nhà xuất bản | Đạt | Dữ liệu demo, kiểm thử giao diện |
-| FR-18 | Quản lý đầu sách | Đạt một phần | Thêm sách, chặn trùng ISBN đúng (TC-14, TC-15); sách bị ẩn vẫn lộ ở API tra cứu công khai (TC-18) |
+| FR-18 | Quản lý đầu sách | Đạt | Thêm sách, chặn trùng ISBN đúng (TC-14, TC-15); sách ẩn không còn lộ ở API công khai (TC-18) và số bản mất, hỏng được cập nhật (TC-44), cả hai đã khắc phục |
 | FR-19 | Duyệt, từ chối yêu cầu mượn | Đạt | TC-22, TC-23, TC-25 |
-| FR-20 | Xác nhận trả sách | Đạt một phần | Cập nhật kho và phiếu đúng; chưa cập nhật `lostQuantity`, `damagedQuantity` (TC-44) |
+| FR-20 | Xác nhận trả sách | Đạt | Cập nhật kho, phiếu và `lostQuantity`, `damagedQuantity` đúng (TC-35, TC-43, TC-44 đã khắc phục) |
 | FR-21 | Duyệt, từ chối gia hạn | Đạt | TC-29 |
 | FR-22 | Quản lý tiền phạt | Đạt | TC-45, TC-46 |
-| FR-23 | Quản lý đặt trước | Đạt một phần | Đặt trước không tự chuyển `fulfilled` khi người chờ mượn (TC-37); giữ chỗ quá 48 giờ đã tự hết hạn (SEC-05 đã khắc phục) |
+| FR-23 | Quản lý đặt trước | Đạt | Đặt trước chuyển `fulfilled` khi người chờ mượn (TC-37 đã khắc phục); giữ chỗ quá 48 giờ tự hết hạn (SEC-05 đã khắc phục) |
 | FR-24 | Quản lý độc giả | Đạt | TC-09 |
 | FR-25 | Kiểm duyệt đánh giá | Đạt | TC-51 |
 | FR-26 | Quản lý bài viết và liên hệ | Đạt | Dữ liệu demo |
 | FR-27 | Xem bảng thống kê | Đạt | TC-54 (sau khi khắc phục SEC-04) |
 | FR-28 | Xuất báo cáo | Đạt | Kiểm thử giao diện (Hình 2.33) |
 | FR-29 | Quản lý tài khoản, phân quyền | Đạt | TC-02, TC-12 |
-| FR-30 | Cấu hình hệ thống | Đạt một phần | Hoạt động nhưng thủ thư cũng truy cập được (TC-13) |
+| FR-30 | Cấu hình hệ thống | Đạt | Chỉ Quản trị viên truy cập được (TC-13 đã khắc phục) |
 | FR-31 | Tự động tính tiền phạt | Đạt | TC-39 đến TC-43 |
 | FR-32 | Tự động thông báo hàng chờ | Đạt | TC-36 |
 | FR-33 | Nhắc hạn trả tự động | Đạt | TC-52, TC-53 (sau khi khắc phục SEC-04) |
 
-Tổng hợp: trong 33 yêu cầu chức năng, **27 đạt** và **6 đạt một phần**, không có yêu cầu nào hoàn toàn chưa đạt. Sau khi khắc phục SEC-01 đến SEC-05, bốn yêu cầu FR-04, FR-13, FR-27, FR-33 chuyển từ đạt một phần sang đạt. Các yêu cầu còn đạt một phần đều do những khiếm khuyết chưa khắc phục ở mục 4.1.2 và 4.1.3, phần lớn là lỗi cài đặt nhỏ và có hướng khắc phục rõ ràng.
+Tổng hợp: trong 33 yêu cầu chức năng, **32 đạt** và **1 đạt một phần**, không có yêu cầu nào hoàn toàn chưa đạt. Sau khi khắc phục SEC-01 đến SEC-05, bốn yêu cầu FR-04, FR-13, FR-27, FR-33 chuyển từ đạt một phần sang đạt; sau khi khắc phục tiếp năm khiếm khuyết ở mục 4.1.2, năm yêu cầu FR-09, FR-18, FR-20, FR-23, FR-30 cũng chuyển sang đạt. Yêu cầu duy nhất còn đạt một phần là FR-03, vì giao diện chưa có nút đăng nhập Google.
 
 **Bảng 4.6: Đối chiếu yêu cầu phi chức năng**
 
@@ -166,7 +166,7 @@ Tổng hợp: trong 33 yêu cầu chức năng, **27 đạt** và **6 đạt m�
 | NFR-03 | Trợ lý AI phản hồi ≤ 10 giây | Đạt | PERF-04 |
 | NFR-04 | Mật khẩu, OTP không lưu dạng rõ | Đạt | SEC-07, TC-04 |
 | NFR-05 | Xác thực token an toàn | Đạt | TC-05, TC-06, TC-08 |
-| NFR-06 | Phân quyền và toàn vẹn dữ liệu | Đạt một phần | SEC-01, SEC-02, SEC-03 đã khắc phục; còn TC-13 (thủ thư đọc được cấu hình) và TC-18 (sách ẩn lộ qua API công khai) |
+| NFR-06 | Phân quyền và toàn vẹn dữ liệu | Đạt | SEC-01, SEC-02, SEC-03 đã khắc phục; TC-13 (thủ thư đọc được cấu hình) và TC-18 (sách ẩn lộ qua API công khai) cũng đã khắc phục |
 | NFR-07 | Không lộ bí mật trong mã nguồn | Đạt | SEC-06 đã khắc phục: mọi khóa nạp từ tệp `.env` |
 | NFR-08 | Tự phục hồi, dữ liệu bền vững | Đạt | Cấu hình `restart`, healthcheck, volume (Bảng 2.8) |
 | NFR-09 | Dễ sử dụng | Đạt | Giao diện tiếng Việt; gửi yêu cầu mượn trong 3 thao tác (Hình 2.22, 2.23) |
@@ -179,14 +179,14 @@ Tổng hợp: trong 33 yêu cầu chức năng, **27 đạt** và **6 đạt m�
 
 ### 4.3.1 Kết quả đạt được
 
-Em đã xây dựng hoàn chỉnh một hệ thống web quản lý thư viện cho nhà sách với đầy đủ vòng đời nghiệp vụ mượn – duyệt – gia hạn – đặt trước – trả – phạt – thanh toán, cùng các tiện ích hiện đại là trợ lý AI gợi ý sách và thanh toán trực tuyến. Hệ thống được đóng gói bằng Docker, chạy được chỉ với một lệnh, và đáp ứng tốt các yêu cầu hiệu năng. Phần lớn các yêu cầu chức năng và phi chức năng đã đạt; các quy tắc nghiệp vụ cốt lõi hoạt động chính xác.
+Em đã xây dựng hoàn chỉnh một hệ thống web quản lý thư viện cho nhà sách với đầy đủ vòng đời nghiệp vụ mượn – duyệt – gia hạn – đặt trước – trả – phạt – thanh toán, cùng các tiện ích hiện đại là trợ lý AI gợi ý sách và thanh toán trực tuyến. Hệ thống được đóng gói bằng Docker, chạy được chỉ với một lệnh, và đáp ứng tốt các yêu cầu hiệu năng. Ở lần kiểm thử cuối, cả 55/55 ca kiểm thử chức năng đều đạt; 32/33 yêu cầu chức năng và 12/13 yêu cầu phi chức năng đạt; các quy tắc nghiệp vụ cốt lõi hoạt động chính xác.
 
 ### 4.3.2 Hạn chế
 
 Qua kiểm thử, em xác định các hạn chế sau:
 
-- **Về bảo mật:** em đã khắc phục cả sáu khiếm khuyết đã phát hiện, kể cả ba khiếm khuyết nghiêm trọng; còn việc thủ thư đọc được cấu hình hệ thống (TC-13). Các bản sửa mới được kiểm chứng bằng kiểm thử tự động và thử giả mạo trong container, chưa thử lại với giao dịch sandbox và tài khoản Google thật.
-- **Về logic nghiệp vụ:** đặt trước không tự chuyển `fulfilled` khi người chờ đã mượn (TC-37); số bản mất và hỏng của đầu sách không được cập nhật (TC-44); chưa giới hạn thời hạn mượn (TC-26); sách bị ẩn vẫn lộ qua API tra cứu công khai (TC-18).
+- **Về bảo mật:** em đã khắc phục cả sáu khiếm khuyết SEC-01 đến SEC-06 (kể cả ba khiếm khuyết nghiêm trọng) và lỗi phân quyền TC-13. Các bản sửa mới được kiểm chứng bằng kiểm thử tự động và thử giả mạo trong container, chưa thử lại với giao dịch sandbox và tài khoản Google thật.
+- **Về logic nghiệp vụ:** các lỗi TC-18, TC-26, TC-37, TC-44 đã được khắc phục; riêng việc chặn ngày mượn trong quá khứ mới được làm ở giao diện, máy chủ chưa kiểm tra (mục 4.1.2).
 - **Về giao diện:** chưa có nút đăng nhập Google dù máy chủ đã hỗ trợ (FR-03).
 - **Về tính đúng đắn của dữ liệu hiển thị:** một số số liệu trên trang chủ và trang đăng nhập được gán cứng, không phản ánh dữ liệu thật (mục 3.3).
 - **Về phạm vi kiểm thử:** em mới kiểm thử ở mức API và một phần giao diện; chưa có kiểm thử tự động cho tầng giao diện, chưa kiểm thử trên nhiều trình duyệt và trên thiết bị di động thật.
@@ -197,7 +197,7 @@ Qua kiểm thử, em xác định các hạn chế sau:
 
 Dựa trên các hạn chế, em đề xuất hướng phát triển theo thứ tự ưu tiên:
 
-1. **Khắc phục các khiếm khuyết còn lại:** các lỗi TC-13, TC-18, TC-26, TC-37, TC-44 theo hướng khắc phục ở mục 4.1.2, 4.1.3; bổ sung nút đăng nhập Google trên giao diện.
+1. **Hoàn thiện các điểm còn dang dở:** bổ sung nút đăng nhập Google trên giao diện; chặn ngày mượn trong quá khứ ở cả máy chủ (khi đó kịch bản kiểm thử cần tạo phiếu quá hạn bằng cách khác).
 2. **Bổ sung kiểm thử tự động** cho cả tầng Service và tầng giao diện, tích hợp vào quy trình tích hợp liên tục (CI).
 3. **Triển khai lên máy chủ thật** có tên miền và HTTPS, đặt múi giờ Việt Nam, và sao lưu định kỳ hai volume dữ liệu (`db_data`, `uploads_data`).
 4. **Hoàn thiện các chức năng còn dang dở** theo README: thống kê nâng cao, xem danh sách sách theo tác giả, theo dõi lịch sử mượn của độc giả từ phía quản trị.
